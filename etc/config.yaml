@@ -1,0 +1,14 @@
+# 配置文件
+Port: "8080"
+
+# mysql
+MysqlDNS: mysql://root:123456@tcp(127.0.0.1:3306)/pave?charset=utf8mb4&parseTime=True&loc=Local
+TimeZone: Asia/Shanghai
+
+# redis
+RedisDNS: redis://61c07e1ae08d08a2@127.0.0.1:6379/1
+
+# machinery
+QueueDNS: 61c07e1ae08d08a2@127.0.0.1:6379
+QueueDb: 12
+WorkNumber: 1
