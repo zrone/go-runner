@@ -2,6 +2,7 @@ package queue
 
 import (
 	config2 "awesome-runner/src/config"
+	"awesome-runner/src/task"
 	"github.com/RichardKnop/machinery/v2"
 	redisbackend "github.com/RichardKnop/machinery/v2/backends/redis"
 	redisbroker "github.com/RichardKnop/machinery/v2/brokers/redis"
@@ -41,7 +42,7 @@ func initMachinery() {
 
 	// Register tasks
 	tasksMap := map[string]interface{}{
-		// "call": CallForCall,
+		"call": task.Deliver,
 	}
 
 	if err := MachineryServer.RegisterTasks(tasksMap); err != nil {
@@ -49,7 +50,7 @@ func initMachinery() {
 	}
 
 	MachineryWork = MachineryServer.NewWorker("task", config2.Cnf.WorkNumber)
-	// MachineryWork.SetErrorHandler(ErrorWorkHandle)
+	MachineryWork.SetErrorHandler(task.TaskErrorHandle)
 }
 
 func StoreMachinery() {

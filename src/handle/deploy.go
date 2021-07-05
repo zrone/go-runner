@@ -1,17 +1,23 @@
 package handle
 
 import (
+	"awesome-runner/src/logic"
 	"awesome-runner/src/logr"
 	"awesome-runner/src/sql"
 	"awesome-runner/types"
-	"fmt"
 	"github.com/kataras/iris/v12"
 	"strings"
 )
 
 // 发送部署任务
 func DeployHandle(ctx iris.Context) {
-	symbol := ctx.URLParam("symbol")
+
+	var (
+		cryptDataConfig types.CryptDataConfig
+		message         types.Message
+		crypt           types.AbstractCrypt
+		symbol          = ctx.URLParam("symbol")
+	)
 
 	if symbol == "" {
 		ctx.JSON(types.Response{
@@ -34,11 +40,6 @@ func DeployHandle(ctx iris.Context) {
 		return
 	}
 
-	var (
-		cryptDataConfig types.CryptDataConfig
-		message         types.Message
-	)
-
 	body, _ := ctx.GetBody()
 	logr.JSON.Unmarshal(body, &message)
 	cryptDataConfig = types.CryptDataConfig{
@@ -48,45 +49,21 @@ func DeployHandle(ctx iris.Context) {
 		Project: types.Project{
 			Secret: internalDeloy.Secret,
 			Path:   internalDeloy.Path,
+			Auth:   internalDeloy.Auth,
 		},
 		Payload: string(body),
 	}
 
-	var (
-		giteeCrypt  types.GiteeCrypt
-		githubCrypt types.GithubCrypt
-		gitlabCrypt types.GitlabCrypt
-		result      bool
-	)
-
 	htmlUrl := message.Repository.HtmlUrl
 	if htmlUrl == "" {
-		gitlabCrypt = types.GitlabCrypt{
-			cryptDataConfig,
-		}
-		types.HandleBuild(&gitlabCrypt, cryptDataConfig)
-		types.HandleBuildPrefixCryptSign(&gitlabCrypt)
-		result = types.HandleCompare(&gitlabCrypt)
+		crypt = types.DiscoverGitlabCrypt(cryptDataConfig)
 	} else {
 		if strings.Contains(htmlUrl, "https://github.com") {
-			githubCrypt = types.GithubCrypt{
-				cryptDataConfig,
-			}
-			types.HandleBuild(&githubCrypt, cryptDataConfig)
-			types.HandleBuildPrefixCryptSign(&githubCrypt)
-			result = types.HandleCompare(&githubCrypt)
+			crypt = types.DiscoverGithubCrypt(cryptDataConfig)
 		} else {
-			giteeCrypt = types.GiteeCrypt{
-				CryptDataConfig: cryptDataConfig,
-			}
-			types.HandleBuild(&giteeCrypt, cryptDataConfig)
-			types.HandleBuildPrefixCryptSign(&giteeCrypt)
-			result = types.HandleCompare(&giteeCrypt)
+			crypt = types.DiscoverGiteeCrypt(cryptDataConfig)
 		}
 	}
 
-	fmt.Println(result)
-	// 签名验证
-	// 发送部署任务
-	// 输出
+	logic.SignatureVerification(ctx, crypt)
 }

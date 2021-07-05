@@ -8,6 +8,7 @@ import (
 	jsoniter "github.com/json-iterator/go"
 	"github.com/lestrrat-go/file-rotatelogs"
 	"github.com/sirupsen/logrus"
+	"os"
 	"time"
 )
 
@@ -19,13 +20,20 @@ var (
 )
 
 func LogInit() {
+	// 创建目录
+	workdir, _ := os.Getwd()
+	if _, err := os.Stat(workdir + `/runtime`); os.IsNotExist(err) {
+		os.MkdirAll(workdir+`/runtime/git`, 0766)
+		os.MkdirAll(workdir+`/runtime/task`, 0766)
+	}
+
 	Ctx = context.Background()
 	JSON = jsoniter.ConfigCompatibleWithStandardLibrary
 
-	path := "runtime/process.logr"
+	path := "runtime/process.log"
 
 	writer, _ := rotatelogs.New(
-		"runtime/process_%Y%m%d.logr",
+		"runtime/process_%Y%m%d.log",
 		rotatelogs.WithLinkName(path),
 		rotatelogs.WithRotationTime(time.Hour*24),
 	)

@@ -47,6 +47,7 @@ func main() {
 
 	app := iris.New()
 	app.Handle("POST", "/", handle.DeployHandle)
+	app.Handle("GET", "/ws", handle.WsHandler)
 	app.Listen(":" + config.Cnf.Port)
 
 	//sql.GetLiteInstance().Create(&types.InternalDeploy{
@@ -58,6 +59,7 @@ func main() {
 	//		"root",
 	//		"localhost",
 	//		22,
+	//		"bluestone",
 	//	},
 	//})
 }

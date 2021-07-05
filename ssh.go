@@ -30,7 +30,7 @@ func main() {
 	if sshType == "password" {
 		config.Auth = []ssh.AuthMethod{ssh.Password(sshPassword)}
 	} else {
-		config.Auth = []ssh.AuthMethod{publicKeyAuthFunc(sshKeyPath)}
+		config.Auth = []ssh.AuthMethod{publicKeyAuthFunc1(sshKeyPath)}
 	}
 
 	//dial 获取ssh client
@@ -81,7 +81,7 @@ func main() {
 	}
 }
 
-func publicKeyAuthFunc(kPath string) ssh.AuthMethod {
+func publicKeyAuthFunc1(kPath string) ssh.AuthMethod {
 	keyPath, err := homedir.Expand(kPath)
 	if err != nil {
 		log.Fatal("find key's home dir failed", err)

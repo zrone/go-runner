@@ -1,9 +1,10 @@
 package types
 
 type AbstractCrypt interface {
-	Build(data CryptDataConfig)
+	Build()
 	Compare() bool
 	BuildPrefixCryptSign()
+	GetCryptDataConfig() CryptDataConfig
 }
 
 type CryptDataConfig struct {
@@ -19,16 +20,5 @@ type CryptDataConfig struct {
 type Project struct {
 	Secret string
 	Path   string
-}
-
-func HandleBuildPrefixCryptSign(c AbstractCrypt) {
-	c.BuildPrefixCryptSign()
-}
-
-func HandleBuild(c AbstractCrypt, data CryptDataConfig) {
-	c.Build(data)
-}
-
-func HandleCompare(c AbstractCrypt) bool {
-	return c.Compare()
+	Auth   Authentication
 }
