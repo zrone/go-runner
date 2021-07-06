@@ -2,11 +2,12 @@ package handle
 
 import (
 	"awesome-runner/src/logr"
+	"awesome-runner/src/sql"
 	"awesome-runner/types"
 	"bufio"
-	"context"
 	"errors"
 	"fmt"
+	"github.com/golang-module/carbon"
 	"github.com/gorilla/websocket"
 	"github.com/kataras/iris/v12"
 	"io"
@@ -174,53 +175,72 @@ func (wsConn *wsConnection) wsWrite(message *Request) error {
 		resp.Payload.Code = 1
 		resp.Payload.Message = "ping success"
 	case 1:
-		ctx, cancel := context.WithCancel(context.Background())
-
 		resp.Payload.Code = 1
 		resp.Payload.Message = "success"
 
 		var (
-			wg  sync.WaitGroup
-			cmd = exec.CommandContext(ctx, "/bin/bash", "-c", fmt.Sprintf("tail -n +0 -f runtime/task/"+message.Payload.UUID+".log"))
+			taskRecord types.TaskLog
+			wg         sync.WaitGroup
+			cmd        *exec.Cmd
 		)
 
-		stdout, _ := cmd.StdoutPipe()
-		cmd.Start()
+		sql.GetLiteInstance().Take(&taskRecord, "uuid = ?", message.Payload.UUID)
+		if taskRecord == (types.TaskLog{}) {
+			return errors.New("Invalid uuid, websocket closed")
+		}
 
-		wg.Add(1)
-		go func() {
-			defer func() {
-				cancel()
-				wg.Done()
+		if taskRecord.State == "PENDING" {
+			resp.Payload.Data = types.LogFormat{
+				Level: "default",
+				Msg:   "PENDING",
+				Time:  carbon.Now().Format("Y-m-d H:i:s"),
+			}
+
+			wsConn.outChan <- resp
+		} else {
+			if taskRecord.State == "RUNNING" {
+				cmd = exec.Command("/bin/bash", "-c", fmt.Sprintf("tail -n +0 -f runtime/task/"+message.Payload.UUID+".log"))
+			} else { // SUCCESS FAILURE
+				cmd = exec.Command("/bin/bash", "-c", fmt.Sprintf("cat runtime/task/"+message.Payload.UUID+".log"))
+			}
+
+			stdout, _ := cmd.StdoutPipe()
+			cmd.Start()
+
+			wg.Add(1)
+			go func() {
+				defer func() {
+					wg.Done()
+				}()
+
+				reader := bufio.NewReader(stdout)
+				for {
+					select {
+					// 读等待
+					case <-wsConn.closeChan:
+						return
+					default:
+					}
+
+					readString, err := reader.ReadString('\n')
+					if err != nil || err == io.EOF {
+						break
+					}
+
+					var msg types.LogFormat
+					err = logr.JSON.Unmarshal([]byte(readString), &msg)
+					if err != nil {
+						return
+					}
+					resp.Payload.Data = msg
+					wsConn.outChan <- resp
+					time.Sleep(time.Millisecond * 1)
+				}
 			}()
 
-			reader := bufio.NewReader(stdout)
-			for {
-				select {
-				// 读等待
-				case <-wsConn.closeChan:
-					return
-				default:
-				}
-
-				readString, err := reader.ReadString('\n')
-				if err != nil || err == io.EOF {
-					break
-				}
-
-				var msg types.LogFormat
-				err = logr.JSON.Unmarshal([]byte(readString), &msg)
-				if err != nil {
-					return
-				}
-				resp.Payload.Data = msg
-				wsConn.outChan <- resp
-				time.Sleep(time.Millisecond * 1)
-			}
-		}()
-
-		wg.Wait()
-		cmd.Wait()
+			wg.Wait()
+			cmd.Wait()
+		}
 	}
 
 	select {

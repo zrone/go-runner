@@ -5,6 +5,7 @@ import (
 	"awesome-runner/src/sql"
 	interactive "awesome-runner/src/ssh"
 	"awesome-runner/types"
+	"context"
 	"errors"
 	"fmt"
 	taskLogrus "github.com/sirupsen/logrus"
@@ -14,12 +15,18 @@ import (
 )
 
 func Deliver(UUID string, Symbol string, Branch string, BeforeScript []string, Script []string, AfterScript []string) error {
-	var internalDeloy types.InternalDeploy
-	sql.GetLiteInstance().First(&internalDeloy, "symbol = ?", Symbol)
+	var (
+		internalDeloy types.InternalDeploy
+		taskRecord    types.TaskLog
+	)
+
+	sql.GetLiteInstance().Take(&internalDeloy, "symbol = ?", Symbol)
 	if internalDeloy == (types.InternalDeploy{}) {
 		logr.Logrus.Errorln("Unknown symbol")
 		return errors.New(types.NOTIFICATION_WORK_SERVER)
 	}
+
+	sql.GetLiteInstance().Model(&taskRecord).Where("uuid = ?", UUID).Update("State", `RUNNING`)
 
 	// 链接SSH
 	sshHost := internalDeloy.Auth.Host
@@ -50,28 +57,44 @@ func Deliver(UUID string, Symbol string, Branch string, BeforeScript []string, S
 	}
 	defer sshClient.Close()
 
+	ctx := context.Background()
 	taskLog, _ := os.OpenFile("runtime/task/"+UUID+".log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	defer taskLog.Close()
 	taskLogrus.SetOutput(taskLog)
+	tl := taskLogrus.WithContext(ctx)
 
-	taskLogrus.Println("--------- Before script ---------")
-	// 执行 before 脚本
+	tl.Println("--------- Before script ---------")
+	// 执行 before 脚本 *File
 	for _, b := range BeforeScript {
-		interactive.Send(sshClient, b, UUID)
+		err := interactive.Send(sshClient, b, tl)
+		if err != nil {
+			sql.GetLiteInstance().Model(&taskRecord).Where("uuid = ?", UUID).Update("State", `FAILURE`)
+			return nil
+		}
 	}
-	taskLogrus.Println("")
-	taskLogrus.Println("--------- Deploy script ---------")
+	tl.Println("")
+	tl.Println("--------- Deploy script ---------")
 	// 执行 main 脚本
 	for _, s := range Script {
-		interactive.Send(sshClient, s, UUID)
+		err := interactive.Send(sshClient, s, tl)
+		if err != nil {
+			sql.GetLiteInstance().Model(&taskRecord).Where("uuid = ?", UUID).Update("State", `FAILURE`)
+			return nil
+		}
 	}
-	taskLogrus.Println("")
-	taskLogrus.Println("--------- After script  ---------")
+	tl.Println("")
+	tl.Println("--------- After script  ---------")
 	// 执行 after 脚本
 	for _, a := range AfterScript {
-		interactive.Send(sshClient, a, UUID)
+		err := interactive.Send(sshClient, a, tl)
+		if err != nil {
+			sql.GetLiteInstance().Model(&taskRecord).Where("uuid = ?", UUID).Update("State", `FAILURE`)
+			return nil
+		}
 	}
-	taskLogrus.Println("")
-	taskLogrus.Println("----------- SUCCESS -------------")
+	tl.Println("")
+	tl.Println("----------- SUCCESS -------------")
+
+	sql.GetLiteInstance().Model(&taskRecord).Where("uuid = ?", UUID).Update("State", `SUCCESS`)
 	return nil
 }

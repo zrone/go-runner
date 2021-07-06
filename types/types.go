@@ -12,19 +12,30 @@ type Config struct {
 
 // 自动化部署配置
 type InternalDeploy struct {
-	Symbol string
-	Uuid   string
-	Secret string
-	Path   string         // template path
-	Auth   Authentication `gorm:"embedded"`
+	Symbol   string         `gorm:"primaryKey;autoIncrement:false" json:"symbol" validate:"required"`
+	Name     string         `json:"name" validate:"required"`
+	Secret   string         `json:"secret" validate:"required"`
+	Path     string         `json:"path" validate:"required"`
+	Auth     Authentication `gorm:"embedded" validate:"required"`
+	IsDelete bool           `json:"is_delete"`
+}
+
+// TASK log
+type TaskLog struct {
+	Symbol   string
+	Uuid     string
+	State    string
+	CreateAt string
+	EndAt    string
+	Args     string
 }
 
 type Authentication struct {
-	Scheme int64
-	User   string
-	Host   string
-	Port   int64
-	Pwd    string
+	Scheme int    `json:"scheme" validate:"required"`
+	User   string `json:"user" validate:"required"`
+	Host   string `json:"host" validate:"required,ipv4"`
+	Port   int    `json:"port" validate:"required"`
+	Pwd    string `json:"-" validate:"required"`
 }
 
 type Request struct {

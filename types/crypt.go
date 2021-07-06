@@ -8,13 +8,14 @@ type AbstractCrypt interface {
 }
 
 type CryptDataConfig struct {
-	Symbol  string
-	Message Message
-	Headers map[string][]string
-	Project Project
-	Token   string
-	Sign    string
-	Payload string
+	Symbol        string
+	Message       Message
+	Headers       map[string][]string
+	Project       Project
+	Token         string
+	Sign          string
+	Payload       string
+	InternalDeloy InternalDeploy
 }
 
 type Project struct {

@@ -1,0 +1,30 @@
+{"level":"info","msg":"--------- Before script ---------","time":"2021-07-06T14:09:44+08:00"}
+{"level":"info","msg":"{418750502226890752 418785528440164352 RUNNING 2021-07-06 14:09:43  [{\"Name\":\"UUID\",\"Type\":\"string\",\"Value\":\"418785528440164352\"},{\"Name\":\"Symbol\",\"Type\":\"string\",\"Value\":\"418750502226890752\"},{\"Name\":\"Branch\",\"Type\":\"string\",\"Value\":\"master\"},{\"Name\":\"BeforeScript\",\"Type\":\"[]string\",\"Value\":null},{\"Name\":\"Script\",\"Type\":\"[]string\",\"Value\":[\"cd ${webpath} \\u0026\\u0026 pwd\",\"cd ${webpath} \\u0026\\u0026 ls\"]},{\"Name\":\"AfterScript\",\"Type\":\"[]string\",\"Value\":null}]}","time":"2021-07-06T14:09:44+08:00"}
+{"level":"info","msg":"","time":"2021-07-06T14:09:44+08:00"}
+{"level":"info","msg":"--------- Deploy script ---------","time":"2021-07-06T14:09:44+08:00"}
+{"level":"info","msg":"cd ${webpath} \u0026\u0026 pwd","time":"2021-07-06T14:09:44+08:00"}
+{"level":"info","msg":"/Users/zrone\n","time":"2021-07-06T14:09:44+08:00"}
+{"level":"info","msg":"cd ${webpath} \u0026\u0026 ls","time":"2021-07-06T14:09:44+08:00"}
+{"level":"info","msg":"Applications\n","time":"2021-07-06T14:09:44+08:00"}
+{"level":"info","msg":"Desktop\n","time":"2021-07-06T14:09:44+08:00"}
+{"level":"info","msg":"Developments\n","time":"2021-07-06T14:09:44+08:00"}
+{"level":"info","msg":"Documents\n","time":"2021-07-06T14:09:44+08:00"}
+{"level":"info","msg":"Downloads\n","time":"2021-07-06T14:09:44+08:00"}
+{"level":"info","msg":"Library\n","time":"2021-07-06T14:09:44+08:00"}
+{"level":"info","msg":"Movies\n","time":"2021-07-06T14:09:44+08:00"}
+{"level":"info","msg":"Music\n","time":"2021-07-06T14:09:44+08:00"}
+{"level":"info","msg":"Pictures\n","time":"2021-07-06T14:09:44+08:00"}
+{"level":"info","msg":"Postman\n","time":"2021-07-06T14:09:44+08:00"}
+{"level":"info","msg":"Public\n","time":"2021-07-06T14:09:44+08:00"}
+{"level":"info","msg":"cert\n","time":"2021-07-06T14:09:44+08:00"}
+{"level":"info","msg":"docker-nodecache-volume\n","time":"2021-07-06T14:09:44+08:00"}
+{"level":"info","msg":"docker-tools\n","time":"2021-07-06T14:09:44+08:00"}
+{"level":"info","msg":"frp\n","time":"2021-07-06T14:09:44+08:00"}
+{"level":"info","msg":"go\n","time":"2021-07-06T14:09:44+08:00"}
+{"level":"info","msg":"md\n","time":"2021-07-06T14:09:44+08:00"}
+{"level":"info","msg":"resource\n","time":"2021-07-06T14:09:44+08:00"}
+{"level":"info","msg":"tencent\n","time":"2021-07-06T14:09:44+08:00"}
+{"level":"info","msg":"","time":"2021-07-06T14:09:44+08:00"}
+{"level":"info","msg":"--------- After script  ---------","time":"2021-07-06T14:09:44+08:00"}
+{"level":"info","msg":"","time":"2021-07-06T14:09:44+08:00"}
+{"level":"info","msg":"----------- SUCCESS -------------","time":"2021-07-06T14:09:44+08:00"}

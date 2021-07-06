@@ -48,18 +48,34 @@ func main() {
 	app := iris.New()
 	app.Handle("POST", "/", handle.DeployHandle)
 	app.Handle("GET", "/ws", handle.WsHandler)
+
+	// api
+	taskRouter := app.Party("/task")
+	{
+		taskRouter.Get("/proj/list", handle.ProjList)
+		taskRouter.Delete("/proj/{symbol}", handle.ProjDelete)
+		taskRouter.Post("/proj", handle.ProjCreate)
+		taskRouter.Patch("/proj/{symbol}", handle.ProjUpdate)
+
+		//taskRouter.Get("/console/list")
+		//taskRouter.Post("/console/retry/{uuid}")
+		//taskRouter.Post("/console/cancle/{uuid}")
+	}
+
 	app.Listen(":" + config.Cnf.Port)
 
 	//sql.GetLiteInstance().Create(&types.InternalDeploy{
-	//	Symbol: "demo",
+	//	Symbol: logr.SnowFlakeId(),
 	//	Secret: "9b84cce730b4ddec467ac439f0ec5c3dec08a743",
 	//	Path:   "/www/wwwroot/demo",
 	//	Auth: types.Authentication{
 	//		1,
-	//		"root",
+	//		"zrone",
 	//		"localhost",
 	//		22,
 	//		"bluestone",
 	//	},
+	//	IsDelete: false,
+	//	Name:     "demo",
 	//})
 }

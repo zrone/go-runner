@@ -6,6 +6,7 @@ import (
 	"awesome-runner/src/sql"
 	"awesome-runner/types"
 	"github.com/kataras/iris/v12"
+	"strconv"
 	"strings"
 )
 
@@ -16,8 +17,10 @@ func DeployHandle(ctx iris.Context) {
 		cryptDataConfig types.CryptDataConfig
 		message         types.Message
 		crypt           types.AbstractCrypt
-		symbol          = ctx.URLParam("symbol")
+		symbol          string
 	)
+	symbolInt, _ := ctx.URLParamInt("symbol")
+	symbol = strconv.Itoa(symbolInt)
 
 	if symbol == "" {
 		ctx.JSON(types.Response{
@@ -30,7 +33,7 @@ func DeployHandle(ctx iris.Context) {
 
 	// 读取项目配置
 	var internalDeloy types.InternalDeploy
-	sql.GetLiteInstance().First(&internalDeloy, "symbol = ?", symbol)
+	sql.GetLiteInstance().Take(&internalDeloy, "symbol = ?", symbol)
 	if internalDeloy == (types.InternalDeploy{}) {
 		ctx.JSON(types.Response{
 			400,
@@ -51,7 +54,8 @@ func DeployHandle(ctx iris.Context) {
 			Path:   internalDeloy.Path,
 			Auth:   internalDeloy.Auth,
 		},
-		Payload: string(body),
+		InternalDeloy: internalDeloy,
+		Payload:       string(body),
 	}
 
 	htmlUrl := message.Repository.HtmlUrl

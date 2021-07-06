@@ -4,6 +4,7 @@ import (
 	conf "awesome-runner/src/config"
 	"awesome-runner/src/logr"
 	"awesome-runner/src/queue"
+	"awesome-runner/src/sql"
 	interactive "awesome-runner/src/ssh"
 	"awesome-runner/types"
 	"fmt"
@@ -41,51 +42,73 @@ func SignatureVerification(ctx iris.Context, crypt types.AbstractCrypt) (int, er
 
 			taskLogrus.SetOutput(taskLog)
 
+			// eta := time.Now().Add(time.Second * 5)
+			args := []tasks.Arg{
+				{
+					Name:  "UUID",
+					Type:  "string",
+					Value: uuid,
+				},
+				{
+					Name:  "Symbol",
+					Type:  "string",
+					Value: crypt.GetCryptDataConfig().Symbol,
+				},
+				{
+					Name:  "Branch",
+					Type:  "string",
+					Value: match[1],
+				},
+				{
+					Name:  "BeforeScript",
+					Type:  "[]string",
+					Value: params.BeforeScript,
+				},
+				{
+					Name:  "Script",
+					Type:  "[]string",
+					Value: params.Script,
+				},
+				{
+					Name:  "AfterScript",
+					Type:  "[]string",
+					Value: params.AfterScript,
+				},
+			}
 			// 发送部署任务
 			signature := &tasks.Signature{
 				UUID: uuid,
 				Name: "call",
-				Args: []tasks.Arg{
-					{
-						Name:  "UUID",
-						Type:  "string",
-						Value: uuid,
-					},
-					{
-						Name:  "Symbol",
-						Type:  "string",
-						Value: crypt.GetCryptDataConfig().Symbol,
-					},
-					{
-						Name:  "Branch",
-						Type:  "string",
-						Value: match[1],
-					},
-					{
-						Name:  "BeforeScript",
-						Type:  "[]string",
-						Value: params.BeforeScript,
-					},
-					{
-						Name:  "Script",
-						Type:  "[]string",
-						Value: params.Script,
-					},
-					{
-						Name:  "AfterScript",
-						Type:  "[]string",
-						Value: params.AfterScript,
-					},
-				},
+				Args: args,
+				// ETA: &eta,
 				// 重试次数和斐波那契间隔
 				// RetryCount:   3,
 				// RetryTimeout: 15,
 			}
 
+			argsString, _ := logr.JSON.Marshal(args)
+
 			if _, err := queue.MachineryServer.SendTask(signature); err != nil {
+				sql.GetLiteInstance().Create(&types.TaskLog{
+					Symbol:   crypt.GetCryptDataConfig().InternalDeloy.Symbol,
+					Uuid:     uuid,
+					CreateAt: carbon.Now().Format("Y-m-d H:i:s"),
+					State:    "FAILURE",
+					Args:     string(argsString),
+				})
+
 				taskLogrus.Errorf("Failed task delivered，%v", err)
 				logr.Clog.Errorf("Failed task delivered，%v", err)
 			} else {
+				//
+				sql.GetLiteInstance().Create(&types.TaskLog{
+					Symbol:   crypt.GetCryptDataConfig().InternalDeloy.Symbol,
+					Uuid:     uuid,
+					CreateAt: carbon.Now().Format("Y-m-d H:i:s"),
+					State:    "PENDING",
+					Args:     string(argsString),
+				})
+
 				return ctx.JSON(types.Response{
 					200,
 					"Success task " + uuid + " delivered",
@@ -112,6 +135,7 @@ func SignatureVerification(ctx iris.Context, crypt types.AbstractCrypt) (int, er
 
 // 判断是否分支是否需要发布
 func isAllowBranch(crypt types.CryptDataConfig, ref string) (bool, error, types.TaskParams) {
+
 	// 链接ssh
 	sshHost := crypt.Project.Auth.Host
 	sshUser := crypt.Project.Auth.User
@@ -136,14 +160,14 @@ func isAllowBranch(crypt types.CryptDataConfig, ref string) (bool, error, types.
 	addr := fmt.Sprintf("%s:%d", sshHost, sshPort)
 	sshClient, err := ssh.Dial("tcp", addr, config)
 	if err != nil {
-		logr.Logrus.Fatal("创建ssh client 失败", err)
+		logr.Clog.Errorf("创建ssh client 失败", err)
+		return false, err, types.TaskParams{}
 	}
 	defer sshClient.Close()
 
 	snowflake := carbon.Now().Format("Ymd") + logr.SnowFlakeId()
 	tempDir := `~/.runner/` + crypt.Symbol + `/` + snowflake
-	if err = interactive.Send(sshClient, fmt.Sprintf(`rm -rf %s && mkdir -p %s && cd %s && git init && git remote add origin %s && git config core.sparsecheckout true && echo .runner-ci.yml >> .git/info/sparse-checkout && git pull origin %s`, tempDir, tempDir, tempDir, crypt.Message.Repository.SshUrl, ref), ""); err != nil {
-		// fmt.Println(err)
+	if err = interactive.InterSend(sshClient, fmt.Sprintf(`rm -rf %s && mkdir -p %s && cd %s && git init && git remote add origin %s && git config core.sparsecheckout true && echo .runner-ci.yml >> .git/info/sparse-checkout && git pull origin %s`, tempDir, tempDir, tempDir, crypt.Message.Repository.SshUrl, ref)); err != nil {
 		return false, err, types.TaskParams{}
 	}
 

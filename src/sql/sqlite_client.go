@@ -4,7 +4,9 @@ import (
 	"awesome-runner/types"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	"gorm.io/plugin/dbresolver"
 	"sync"
+	"time"
 )
 
 var SDB *gorm.DB
@@ -15,8 +17,13 @@ func initLiteClient() *gorm.DB {
 	db, _ := gorm.Open(sqlite.Open("data/pave.db"), &gorm.Config{
 		PrepareStmt: true,
 	})
+	db.Use(dbresolver.Register(dbresolver.Config{ /* xxx */ }).
+		SetConnMaxIdleTime(time.Hour).
+		SetConnMaxLifetime(24 * time.Hour).
+		SetMaxIdleConns(100).
+		SetMaxOpenConns(200))
 
-	db.AutoMigrate(&types.InternalDeploy{})
+	db.AutoMigrate(&types.InternalDeploy{}, &types.TaskLog{})
 	return db
 }
 

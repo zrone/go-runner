@@ -4,6 +4,7 @@ import (
 	"awesome-runner/src/cache"
 	"awesome-runner/src/config"
 	"awesome-runner/src/logr"
+	"awesome-runner/src/sql"
 	"awesome-runner/types"
 	"github.com/RichardKnop/machinery/v2/tasks"
 )
@@ -11,6 +12,12 @@ import (
 func TaskErrorHandle(task *tasks.Signature, err error) {
 	switch err.Error() {
 	case types.NOTIFICATION_WORK_SERVER:
+		var taskRecord types.TaskLog
+		sql.GetLiteInstance().Take(&taskRecord, "uuid = ?", task.UUID)
+		if taskRecord != (types.TaskLog{}) {
+			sql.GetLiteInstance().Model(&taskRecord).Update("State", `FAILURE`)
+		}
+
 		// 记录失败任务
 		logr.Logrus.Errorf("Err: %s, TaskId: %s", err.Error(), task.UUID)
 

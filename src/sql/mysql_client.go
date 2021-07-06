@@ -4,8 +4,10 @@ import (
 	"awesome-runner/src/config"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/plugin/dbresolver"
 	"net/url"
 	"sync"
+	"time"
 )
 
 var (
@@ -25,6 +27,12 @@ func initMysqlClient() *gorm.DB {
 	}), &gorm.Config{
 		PrepareStmt: true,
 	})
+
+	db.Use(dbresolver.Register(dbresolver.Config{ /* xxx */ }).
+		SetConnMaxIdleTime(time.Hour).
+		SetConnMaxLifetime(24 * time.Hour).
+		SetMaxIdleConns(100).
+		SetMaxOpenConns(200))
 
 	return db
 }

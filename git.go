@@ -1,25 +1,21 @@
 package main
 
 import (
-	conf "awesome-runner/src/config"
-	"awesome-runner/src/logr"
 	"awesome-runner/src/sql"
-	interactive "awesome-runner/src/ssh"
 	"awesome-runner/types"
 	"bufio"
 	"errors"
 	"fmt"
 	examples "github.com/go-git/go-git/v5/_examples"
-	"github.com/golang-module/carbon"
-	jsoniter "github.com/json-iterator/go"
+	"github.com/go-playground/locales/zh"
+	ut "github.com/go-playground/universal-translator"
+	"github.com/go-playground/validator/v10"
+	zh_translations "github.com/go-playground/validator/v10/translations/zh"
 	"github.com/mitchellh/go-homedir"
 	"golang.org/x/crypto/ssh"
 	"io"
 	"io/ioutil"
 	"log"
-	"os"
-	"os/exec"
-	"strings"
 	"sync"
 	"time"
 )
@@ -40,121 +36,82 @@ import (
 //}
 
 func main() {
-	JSON := jsoniter.ConfigCompatibleWithStandardLibrary
+	// fmt.Println(time.Now().UTC().Format("2006-01-02 15:04:05"))
+	uni := ut.New(zh.New())
+	trans, _ := uni.GetTranslator("zh")
+	validate := validator.New()
 
-	closeChan := make(chan byte)
+	zh_translations.RegisterDefaultTranslations(validate, trans)
 
-	time.AfterFunc(time.Second*5, func() {
-		fmt.Println("after")
-		close(closeChan)
-	})
+	myEmail := ""
 
-	//for {
-	//	select {
-	//	// 读等待
-	//	case <-closeChan:
-	//		fmt.Println("demo")
-	//		return
-	//	default:
-	//	}
-	//}
+	errs := validate.Var(myEmail, "required")
 
-	var (
-		wg  sync.WaitGroup
-		cmd = exec.Command("/bin/bash", "-c", fmt.Sprintf("tail -n +0 -f runtime/task/418423262502981632.log"))
-	)
-
-	stdout, _ := cmd.StdoutPipe()
-	cmd.Start()
-
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		reader := bufio.NewReader(stdout)
-		for {
-			select {
-			// 读等待
-			case <-closeChan:
-				fmt.Println("demo")
-				return
-			default:
-			}
-
-			readString, err := reader.ReadString('\n')
-			if err != nil || err == io.EOF {
-				return
-			}
-			var msg types.LogFormat
-			err = JSON.Unmarshal([]byte(readString), &msg)
-			if err != nil {
-				return
-			}
-			fmt.Println(msg)
-		}
-	}()
-
-	wg.Wait()
-	cmd.Wait()
+	if errs != nil {
+		err := errs.(validator.ValidationErrors)
+		fmt.Println(err.Translate(trans)) // output: Key: "" Error:Field validation for "" failed on the "email" tag
+		return
+	}
 }
 
 func main12() {
-	var internalDeloy types.InternalDeploy
-	sql.GetLiteInstance().First(&internalDeloy, "symbol = ?", "demo")
-
-	// 链接ssh
-	sshHost := "127.0.0.1"
-	sshUser := "zrone"
-	sshPassword := "bluestone"
-	sshType := "publickey"                   //password 或者 key
-	sshKeyPath := "/Users/zrone/.ssh/id_rsa" //ssh id_rsa.id 路径"
-	sshPort := 22
-
-	//创建sshp登陆配置
-	config := &ssh.ClientConfig{
-		Timeout:         time.Second, //ssh 连接time out 时间一秒钟, 如果ssh验证错误 会在一秒内返回
-		User:            sshUser,
-		HostKeyCallback: ssh.InsecureIgnoreHostKey(), //这个可以， 但是不够安全
-		//HostKeyCallback: hostKeyCallBackFunc(h.Host),
-	}
-	if sshType == "password" {
-		config.Auth = []ssh.AuthMethod{ssh.Password(sshPassword)}
-	} else {
-		config.Auth = []ssh.AuthMethod{publicKeyAuthFunc(sshKeyPath)}
-	}
-
-	//dial 获取ssh client
-	addr := fmt.Sprintf("%s:%d", sshHost, sshPort)
-	sshClient, err := ssh.Dial("tcp", addr, config)
-	if err != nil {
-		log.Fatal("创建ssh client 失败", err)
-	}
-	defer sshClient.Close()
-
-	snowflake := carbon.Now().Format("Ymd") + logr.SnowFlakeId()
-	tempDir := `~/.runner/demo/` + snowflake
-	if err = interactive.Send(sshClient, fmt.Sprintf(`rm -rf %s && mkdir -p %s && cd %s && git init && git remote add origin %s && git config core.sparsecheckout true && echo .runner-ci.yml >> .git/info/sparse-checkout && git pull origin master`, tempDir, tempDir, tempDir, "git@gitee.com:marksirl/demo.git"), ""); err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	dir, _ := os.Getwd()
-	cmd := exec.Command("/bin/bash", "-c", fmt.Sprintf("scp %s@%s:%s/.runner-ci.yml %s/runtime/%s.runner-ci.yml", "zrone", "localhost", tempDir, dir, snowflake))
-	cmd.Start()
-	cmd.Wait()
-
-	var (
-		runnerCi types.RunnerCi
-	)
-
-	conf.ParseYaml(fmt.Sprintf("runtime/%s.runner-ci.yml", snowflake), &runnerCi)
-	var isContain bool = false
-	for _, b := range runnerCi.Only {
-		if strings.Compare(b, "branch") == -1 {
-			isContain = true
-			break
-		}
-	}
-	fmt.Println(isContain)
+	//var internalDeloy types.InternalDeploy
+	//sql.GetLiteInstance().First(&internalDeloy, "symbol = ?", "demo")
+	//
+	//// 链接ssh
+	//sshHost := "127.0.0.1"
+	//sshUser := "zrone"
+	//sshPassword := "bluestone"
+	//sshType := "publickey"                   //password 或者 key
+	//sshKeyPath := "/Users/zrone/.ssh/id_rsa" //ssh id_rsa.id 路径"
+	//sshPort := 22
+	//
+	////创建sshp登陆配置
+	//config := &ssh.ClientConfig{
+	//	Timeout:         time.Second, //ssh 连接time out 时间一秒钟, 如果ssh验证错误 会在一秒内返回
+	//	User:            sshUser,
+	//	HostKeyCallback: ssh.InsecureIgnoreHostKey(), //这个可以， 但是不够安全
+	//	//HostKeyCallback: hostKeyCallBackFunc(h.Host),
+	//}
+	//if sshType == "password" {
+	//	config.Auth = []ssh.AuthMethod{ssh.Password(sshPassword)}
+	//} else {
+	//	config.Auth = []ssh.AuthMethod{publicKeyAuthFunc(sshKeyPath)}
+	//}
+	//
+	////dial 获取ssh client
+	//addr := fmt.Sprintf("%s:%d", sshHost, sshPort)
+	//sshClient, err := ssh.Dial("tcp", addr, config)
+	//if err != nil {
+	//	log.Fatal("创建ssh client 失败", err)
+	//}
+	//defer sshClient.Close()
+	//
+	//snowflake := carbon.Now().Format("Ymd") + logr.SnowFlakeId()
+	//tempDir := `~/.runner/demo/` + snowflake
+	//if err = interactive.Send(sshClient, fmt.Sprintf(`rm -rf %s && mkdir -p %s && cd %s && git init && git remote add origin %s && git config core.sparsecheckout true && echo .runner-ci.yml >> .git/info/sparse-checkout && git pull origin master`, tempDir, tempDir, tempDir, "git@gitee.com:marksirl/demo.git"), ""); err != nil {
+	//	fmt.Println(err)
+	//	return
+	//}
+	//
+	//dir, _ := os.Getwd()
+	//cmd := exec.Command("/bin/bash", "-c", fmt.Sprintf("scp %s@%s:%s/.runner-ci.yml %s/runtime/%s.runner-ci.yml", "zrone", "localhost", tempDir, dir, snowflake))
+	//cmd.Start()
+	//cmd.Wait()
+	//
+	//var (
+	//	runnerCi types.RunnerCi
+	//)
+	//
+	//conf.ParseYaml(fmt.Sprintf("runtime/%s.runner-ci.yml", snowflake), &runnerCi)
+	//var isContain bool = false
+	//for _, b := range runnerCi.Only {
+	//	if strings.Compare(b, "branch") == -1 {
+	//		isContain = true
+	//		break
+	//	}
+	//}
+	//fmt.Println(isContain)
 	// 执行脚本
 }
 
@@ -201,7 +158,7 @@ func main1() {
 	direct := fmt.Sprintf("git pull %s", branch)
 
 	var internalDeloy types.InternalDeploy
-	sql.GetLiteInstance().First(&internalDeloy, "symbol = ?", "demo")
+	sql.GetLiteInstance().Take(&internalDeloy, "symbol = ?", "demo")
 
 	// 链接ssh
 	sshHost := "127.0.0.1"
