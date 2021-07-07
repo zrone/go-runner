@@ -23,7 +23,7 @@ func initLiteClient() *gorm.DB {
 		SetMaxIdleConns(100).
 		SetMaxOpenConns(200))
 
-	db.AutoMigrate(&types.InternalDeploy{}, &types.TaskLog{})
+	db.AutoMigrate(&types.InternalDeploy{}, &types.TaskLog{}, &types.Manager{})
 	return db
 }
 

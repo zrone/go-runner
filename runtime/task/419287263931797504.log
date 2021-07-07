@@ -1,0 +1,86 @@
+{"level":"debug","msg":"--------- Before script ---------","time":"2021-07-07T23:23:42+08:00"}
+{"level":"info","msg":"","time":"2021-07-07T23:23:42+08:00"}
+{"level":"debug","msg":"--------- Deploy script ---------","time":"2021-07-07T23:23:42+08:00"}
+{"level":"debug","msg":"cd ${webpath} \u0026\u0026 pwd","time":"2021-07-07T23:23:42+08:00"}
+{"level":"info","msg":"/Users/zrone\n","time":"2021-07-07T23:23:42+08:00"}
+{"level":"debug","msg":"cd ${webpath} \u0026\u0026 ls","time":"2021-07-07T23:23:42+08:00"}
+{"level":"info","msg":"Applications\n","time":"2021-07-07T23:23:42+08:00"}
+{"level":"info","msg":"Desktop\n","time":"2021-07-07T23:23:42+08:00"}
+{"level":"info","msg":"Developments\n","time":"2021-07-07T23:23:42+08:00"}
+{"level":"info","msg":"Documents\n","time":"2021-07-07T23:23:42+08:00"}
+{"level":"info","msg":"Downloads\n","time":"2021-07-07T23:23:42+08:00"}
+{"level":"info","msg":"Library\n","time":"2021-07-07T23:23:42+08:00"}
+{"level":"info","msg":"Movies\n","time":"2021-07-07T23:23:42+08:00"}
+{"level":"info","msg":"Music\n","time":"2021-07-07T23:23:42+08:00"}
+{"level":"info","msg":"Pictures\n","time":"2021-07-07T23:23:42+08:00"}
+{"level":"info","msg":"Postman\n","time":"2021-07-07T23:23:42+08:00"}
+{"level":"info","msg":"Public\n","time":"2021-07-07T23:23:42+08:00"}
+{"level":"info","msg":"cert\n","time":"2021-07-07T23:23:42+08:00"}
+{"level":"info","msg":"docker-nodecache-volume\n","time":"2021-07-07T23:23:42+08:00"}
+{"level":"info","msg":"docker-tools\n","time":"2021-07-07T23:23:42+08:00"}
+{"level":"info","msg":"frp\n","time":"2021-07-07T23:23:42+08:00"}
+{"level":"info","msg":"go\n","time":"2021-07-07T23:23:42+08:00"}
+{"level":"info","msg":"md\n","time":"2021-07-07T23:23:42+08:00"}
+{"level":"info","msg":"resource\n","time":"2021-07-07T23:23:42+08:00"}
+{"level":"info","msg":"tencent\n","time":"2021-07-07T23:23:42+08:00"}
+{"level":"debug","msg":"ping www.baidu.com","time":"2021-07-07T23:23:42+08:00"}
+{"level":"info","msg":"PING www.a.shifen.com (36.152.44.96): 56 data bytes\n","time":"2021-07-07T23:23:42+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=0 ttl=55 time=10.167 ms\n","time":"2021-07-07T23:23:42+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=1 ttl=55 time=8.555 ms\n","time":"2021-07-07T23:23:43+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=2 ttl=55 time=7.844 ms\n","time":"2021-07-07T23:23:44+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=3 ttl=55 time=7.336 ms\n","time":"2021-07-07T23:23:45+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=4 ttl=55 time=12.026 ms\n","time":"2021-07-07T23:23:46+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=5 ttl=55 time=7.391 ms\n","time":"2021-07-07T23:23:47+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=6 ttl=55 time=7.079 ms\n","time":"2021-07-07T23:23:48+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=7 ttl=55 time=7.237 ms\n","time":"2021-07-07T23:23:49+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=8 ttl=55 time=7.427 ms\n","time":"2021-07-07T23:23:50+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=9 ttl=55 time=9.689 ms\n","time":"2021-07-07T23:23:51+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=10 ttl=55 time=8.708 ms\n","time":"2021-07-07T23:23:52+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=11 ttl=55 time=7.211 ms\n","time":"2021-07-07T23:23:53+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=12 ttl=55 time=8.146 ms\n","time":"2021-07-07T23:23:54+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=13 ttl=55 time=7.352 ms\n","time":"2021-07-07T23:23:55+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=14 ttl=55 time=8.151 ms\n","time":"2021-07-07T23:23:56+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=15 ttl=55 time=7.729 ms\n","time":"2021-07-07T23:23:57+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=16 ttl=55 time=7.883 ms\n","time":"2021-07-07T23:23:58+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=17 ttl=55 time=7.435 ms\n","time":"2021-07-07T23:23:59+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=18 ttl=55 time=8.259 ms\n","time":"2021-07-07T23:24:00+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=19 ttl=55 time=7.271 ms\n","time":"2021-07-07T23:24:01+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=20 ttl=55 time=7.342 ms\n","time":"2021-07-07T23:24:02+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=21 ttl=55 time=7.435 ms\n","time":"2021-07-07T23:24:03+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=22 ttl=55 time=7.600 ms\n","time":"2021-07-07T23:24:04+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=23 ttl=55 time=7.547 ms\n","time":"2021-07-07T23:24:05+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=24 ttl=55 time=8.421 ms\n","time":"2021-07-07T23:24:06+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=25 ttl=55 time=9.049 ms\n","time":"2021-07-07T23:24:07+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=26 ttl=55 time=7.952 ms\n","time":"2021-07-07T23:24:08+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=27 ttl=55 time=7.979 ms\n","time":"2021-07-07T23:24:09+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=28 ttl=55 time=9.004 ms\n","time":"2021-07-07T23:24:10+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=29 ttl=55 time=7.839 ms\n","time":"2021-07-07T23:24:11+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=30 ttl=55 time=7.734 ms\n","time":"2021-07-07T23:24:12+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=31 ttl=55 time=8.902 ms\n","time":"2021-07-07T23:24:13+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=32 ttl=55 time=25.609 ms\n","time":"2021-07-07T23:24:14+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=33 ttl=55 time=10.162 ms\n","time":"2021-07-07T23:24:15+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=34 ttl=55 time=10.132 ms\n","time":"2021-07-07T23:24:16+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=35 ttl=55 time=9.945 ms\n","time":"2021-07-07T23:24:17+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=36 ttl=55 time=8.422 ms\n","time":"2021-07-07T23:24:18+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=37 ttl=55 time=8.239 ms\n","time":"2021-07-07T23:24:19+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=38 ttl=55 time=13.900 ms\n","time":"2021-07-07T23:24:20+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=39 ttl=55 time=7.034 ms\n","time":"2021-07-07T23:24:21+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=40 ttl=55 time=7.487 ms\n","time":"2021-07-07T23:24:22+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=41 ttl=55 time=7.790 ms\n","time":"2021-07-07T23:24:23+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=42 ttl=55 time=6.805 ms\n","time":"2021-07-07T23:24:24+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=43 ttl=55 time=8.506 ms\n","time":"2021-07-07T23:24:25+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=44 ttl=55 time=7.363 ms\n","time":"2021-07-07T23:24:26+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=45 ttl=55 time=7.612 ms\n","time":"2021-07-07T23:24:27+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=46 ttl=55 time=8.517 ms\n","time":"2021-07-07T23:24:28+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=47 ttl=55 time=10.316 ms\n","time":"2021-07-07T23:24:29+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=48 ttl=55 time=9.607 ms\n","time":"2021-07-07T23:24:30+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=49 ttl=55 time=9.956 ms\n","time":"2021-07-07T23:24:31+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=50 ttl=55 time=8.631 ms\n","time":"2021-07-07T23:24:32+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=51 ttl=55 time=7.900 ms\n","time":"2021-07-07T23:24:33+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=52 ttl=55 time=12.187 ms\n","time":"2021-07-07T23:24:34+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=53 ttl=55 time=7.263 ms\n","time":"2021-07-07T23:24:35+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=54 ttl=55 time=7.425 ms\n","time":"2021-07-07T23:24:36+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=55 ttl=55 time=9.610 ms\n","time":"2021-07-07T23:24:37+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=56 ttl=55 time=7.084 ms\n","time":"2021-07-07T23:24:38+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=57 ttl=55 time=8.035 ms\n","time":"2021-07-07T23:24:39+08:00"}
+{"level":"info","msg":"64 bytes from 36.152.44.96: icmp_seq=58 ttl=55 time=7.511 ms\n","time":"2021-07-07T23:24:40+08:00"}

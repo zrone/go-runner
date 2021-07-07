@@ -1,6 +1,7 @@
 package types
 
 type Config struct {
+	Host       string
 	Port       string
 	MysqlDNS   string
 	TimeZone   string
@@ -12,22 +13,32 @@ type Config struct {
 
 // 自动化部署配置
 type InternalDeploy struct {
-	Symbol   string         `gorm:"primaryKey;autoIncrement:false" json:"symbol" validate:"required"`
-	Name     string         `json:"name" validate:"required"`
-	Secret   string         `json:"secret" validate:"required"`
-	Path     string         `json:"path" validate:"required"`
-	Auth     Authentication `gorm:"embedded" validate:"required"`
-	IsDelete bool           `json:"is_delete"`
+	Symbol    string         `gorm:"primaryKey;autoIncrement:false" json:"symbol" validate:"required"`
+	Name      string         `json:"name" validate:"required"`
+	Secret    string         `json:"secret"`
+	Path      string         `json:"path" validate:"required"`
+	Option    uint8          `json:"option" validate:"required"` // 部署类型 1 自动化部署 2 计划发布
+	OriginTag string         `json:"origin_tag"`                 // 部署分支
+	Auth      Authentication `gorm:"embedded" validate:"required"`
+	IsDelete  bool           `json:"is_delete"`
 }
 
 // TASK log
 type TaskLog struct {
-	Symbol   string
-	Uuid     string
-	State    string
-	CreateAt string
-	EndAt    string
-	Args     string
+	ID       int64  `json:"id" gorm:"primaryKey;autoIncrement:true"`
+	Symbol   string `json:"symbol"`
+	Uuid     string `json:"uuid"`
+	State    string `json:"state"`
+	CreateAt string `json:"create_at"`
+	EndAt    string `json:"end_at"`
+	Args     string `json:"-"`
+}
+
+// manager
+type Manager struct {
+	ID       int64  `json:"id" gorm:"primaryKey;autoIncrement:true"`
+	UserName string `json:"user_name"`
+	Password string `json:"password"`
 }
 
 type Authentication struct {

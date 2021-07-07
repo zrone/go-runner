@@ -43,6 +43,16 @@ func DeployHandle(ctx iris.Context) {
 		return
 	}
 
+	if internalDeloy.Option != 1 {
+		ctx.JSON(types.Response{
+			400,
+			// "Invalid Project Option",
+			"当前项目为上线发布类型，不支持自动化部署",
+			nil,
+		})
+		return
+	}
+
 	body, _ := ctx.GetBody()
 	logr.JSON.Unmarshal(body, &message)
 	cryptDataConfig = types.CryptDataConfig{

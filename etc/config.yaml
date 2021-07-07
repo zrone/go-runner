@@ -1,7 +1,8 @@
 # 配置文件
+Host: "127.0.0.1"
 Port: "8080"
 
-# mysql
+# mysql (忽略配置，暂未用到)
 MysqlDNS: mysql://root:123456@tcp(127.0.0.1:3306)/pave?charset=utf8mb4&parseTime=True&loc=Local
 TimeZone: Asia/Shanghai
 

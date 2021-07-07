@@ -9,5 +9,6 @@ before_script: []
 script:
   - cd ${webpath} && pwd
   - cd ${webpath} && ls
+  - ping www.baidu.com
 # 发布运行脚本
 after_script: []

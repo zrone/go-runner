@@ -8,6 +8,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/golang-module/carbon"
 	taskLogrus "github.com/sirupsen/logrus"
 	"golang.org/x/crypto/ssh"
 	"os"
@@ -26,7 +27,10 @@ func Deliver(UUID string, Symbol string, Branch string, BeforeScript []string, S
 		return errors.New(types.NOTIFICATION_WORK_SERVER)
 	}
 
-	sql.GetLiteInstance().Model(&taskRecord).Where("uuid = ?", UUID).Update("State", `RUNNING`)
+	sql.GetLiteInstance().Model(&taskRecord).Where("uuid = ?", UUID).Updates(types.TaskLog{
+		State: `RUNNING`,
+		EndAt: carbon.Now().Format("Y-m-d H:i:s"),
+	})
 
 	// 链接SSH
 	sshHost := internalDeloy.Auth.Host
@@ -63,38 +67,51 @@ func Deliver(UUID string, Symbol string, Branch string, BeforeScript []string, S
 	taskLogrus.SetOutput(taskLog)
 	tl := taskLogrus.WithContext(ctx)
 
-	tl.Println("--------- Before script ---------")
+	tl.Debug("--------- Before script ---------")
 	// 执行 before 脚本 *File
 	for _, b := range BeforeScript {
 		err := interactive.Send(sshClient, b, tl)
 		if err != nil {
-			sql.GetLiteInstance().Model(&taskRecord).Where("uuid = ?", UUID).Update("State", `FAILURE`)
+			sql.GetLiteInstance().Model(&taskRecord).Where("uuid = ?", UUID).Updates(types.TaskLog{
+				State: `FAILURE`,
+				EndAt: carbon.Now().Format("Y-m-d H:i:s"),
+			})
 			return nil
 		}
 	}
 	tl.Println("")
-	tl.Println("--------- Deploy script ---------")
+	tl.Debug("--------- Deploy script ---------")
 	// 执行 main 脚本
 	for _, s := range Script {
 		err := interactive.Send(sshClient, s, tl)
 		if err != nil {
-			sql.GetLiteInstance().Model(&taskRecord).Where("uuid = ?", UUID).Update("State", `FAILURE`)
+			sql.GetLiteInstance().Model(&taskRecord).Where("uuid = ?", UUID).Updates(types.TaskLog{
+				State: `FAILURE`,
+				EndAt: carbon.Now().Format("Y-m-d H:i:s"),
+			})
 			return nil
 		}
 	}
 	tl.Println("")
-	tl.Println("--------- After script  ---------")
+	tl.Debug("--------- After script  ---------")
 	// 执行 after 脚本
 	for _, a := range AfterScript {
 		err := interactive.Send(sshClient, a, tl)
 		if err != nil {
-			sql.GetLiteInstance().Model(&taskRecord).Where("uuid = ?", UUID).Update("State", `FAILURE`)
+			sql.GetLiteInstance().Model(&taskRecord).Where("uuid = ?", UUID).Updates(types.TaskLog{
+				State: `FAILURE`,
+				EndAt: carbon.Now().Format("Y-m-d H:i:s"),
+			})
 			return nil
 		}
 	}
 	tl.Println("")
-	tl.Println("----------- SUCCESS -------------")
+	tl.Debug("----------- SUCCESS -------------")
+	tl.Println("")
 
-	sql.GetLiteInstance().Model(&taskRecord).Where("uuid = ?", UUID).Update("State", `SUCCESS`)
+	sql.GetLiteInstance().Model(&taskRecord).Where("uuid = ?", UUID).Updates(types.TaskLog{
+		State: `SUCCESS`,
+		EndAt: carbon.Now().Format("Y-m-d H:i:s"),
+	})
 	return nil
 }

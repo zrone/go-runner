@@ -1,0 +1,120 @@
+{"level":"debug","msg":"--------- Before script ---------","time":"2021-07-07T11:26:40+08:00"}
+{"level":"info","msg":"","time":"2021-07-07T11:26:40+08:00"}
+{"level":"debug","msg":"--------- Deploy script ---------","time":"2021-07-07T11:26:40+08:00"}
+{"level":"debug","msg":"cd ${webpath} \u0026\u0026 pwd","time":"2021-07-07T11:26:40+08:00"}
+{"level":"info","msg":"/Users/zrone\n","time":"2021-07-07T11:26:40+08:00"}
+{"level":"debug","msg":"cd ${webpath} \u0026\u0026 ls","time":"2021-07-07T11:26:40+08:00"}
+{"level":"info","msg":"Applications\n","time":"2021-07-07T11:26:40+08:00"}
+{"level":"info","msg":"Desktop\n","time":"2021-07-07T11:26:40+08:00"}
+{"level":"info","msg":"Developments\n","time":"2021-07-07T11:26:40+08:00"}
+{"level":"info","msg":"Documents\n","time":"2021-07-07T11:26:40+08:00"}
+{"level":"info","msg":"Downloads\n","time":"2021-07-07T11:26:40+08:00"}
+{"level":"info","msg":"Library\n","time":"2021-07-07T11:26:40+08:00"}
+{"level":"info","msg":"Movies\n","time":"2021-07-07T11:26:40+08:00"}
+{"level":"info","msg":"Music\n","time":"2021-07-07T11:26:40+08:00"}
+{"level":"info","msg":"Pictures\n","time":"2021-07-07T11:26:40+08:00"}
+{"level":"info","msg":"Postman\n","time":"2021-07-07T11:26:40+08:00"}
+{"level":"info","msg":"Public\n","time":"2021-07-07T11:26:40+08:00"}
+{"level":"info","msg":"cert\n","time":"2021-07-07T11:26:40+08:00"}
+{"level":"info","msg":"docker-nodecache-volume\n","time":"2021-07-07T11:26:40+08:00"}
+{"level":"info","msg":"docker-tools\n","time":"2021-07-07T11:26:40+08:00"}
+{"level":"info","msg":"frp\n","time":"2021-07-07T11:26:40+08:00"}
+{"level":"info","msg":"go\n","time":"2021-07-07T11:26:40+08:00"}
+{"level":"info","msg":"md\n","time":"2021-07-07T11:26:40+08:00"}
+{"level":"info","msg":"resource\n","time":"2021-07-07T11:26:40+08:00"}
+{"level":"info","msg":"tencent\n","time":"2021-07-07T11:26:40+08:00"}
+{"level":"debug","msg":"ping www.baidu.com","time":"2021-07-07T11:26:40+08:00"}
+{"level":"info","msg":"PING www.a.shifen.com (14.215.177.38): 56 data bytes\n","time":"2021-07-07T11:26:40+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=0 ttl=53 time=29.063 ms\n","time":"2021-07-07T11:26:40+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=1 ttl=53 time=29.153 ms\n","time":"2021-07-07T11:26:41+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=2 ttl=53 time=29.382 ms\n","time":"2021-07-07T11:26:42+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=3 ttl=53 time=29.675 ms\n","time":"2021-07-07T11:26:43+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=4 ttl=53 time=33.333 ms\n","time":"2021-07-07T11:26:44+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=5 ttl=53 time=59.963 ms\n","time":"2021-07-07T11:26:45+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=6 ttl=53 time=29.924 ms\n","time":"2021-07-07T11:26:46+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=7 ttl=53 time=29.672 ms\n","time":"2021-07-07T11:26:47+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=8 ttl=53 time=29.717 ms\n","time":"2021-07-07T11:26:48+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=9 ttl=53 time=29.517 ms\n","time":"2021-07-07T11:26:49+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=10 ttl=53 time=29.292 ms\n","time":"2021-07-07T11:26:50+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=11 ttl=53 time=29.600 ms\n","time":"2021-07-07T11:26:51+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=12 ttl=53 time=73.902 ms\n","time":"2021-07-07T11:26:53+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=13 ttl=53 time=30.643 ms\n","time":"2021-07-07T11:26:53+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=14 ttl=53 time=29.099 ms\n","time":"2021-07-07T11:26:54+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=15 ttl=53 time=29.992 ms\n","time":"2021-07-07T11:26:55+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=16 ttl=53 time=31.425 ms\n","time":"2021-07-07T11:26:56+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=17 ttl=53 time=29.786 ms\n","time":"2021-07-07T11:26:57+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=18 ttl=53 time=28.998 ms\n","time":"2021-07-07T11:26:58+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=19 ttl=53 time=440.735 ms\n","time":"2021-07-07T11:27:00+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=20 ttl=53 time=47.214 ms\n","time":"2021-07-07T11:27:01+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=21 ttl=53 time=30.007 ms\n","time":"2021-07-07T11:27:01+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=22 ttl=53 time=29.301 ms\n","time":"2021-07-07T11:27:02+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=23 ttl=53 time=29.837 ms\n","time":"2021-07-07T11:27:03+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=24 ttl=53 time=29.136 ms\n","time":"2021-07-07T11:27:05+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=25 ttl=53 time=30.014 ms\n","time":"2021-07-07T11:27:06+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=26 ttl=53 time=29.720 ms\n","time":"2021-07-07T11:27:07+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=27 ttl=53 time=29.018 ms\n","time":"2021-07-07T11:27:08+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=28 ttl=53 time=30.234 ms\n","time":"2021-07-07T11:27:09+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=29 ttl=53 time=29.785 ms\n","time":"2021-07-07T11:27:10+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=30 ttl=53 time=29.093 ms\n","time":"2021-07-07T11:27:11+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=31 ttl=53 time=277.241 ms\n","time":"2021-07-07T11:27:12+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=32 ttl=53 time=31.315 ms\n","time":"2021-07-07T11:27:13+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=33 ttl=53 time=30.604 ms\n","time":"2021-07-07T11:27:14+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=34 ttl=53 time=29.474 ms\n","time":"2021-07-07T11:27:15+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=35 ttl=53 time=29.553 ms\n","time":"2021-07-07T11:27:16+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=36 ttl=53 time=29.478 ms\n","time":"2021-07-07T11:27:17+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=37 ttl=53 time=29.152 ms\n","time":"2021-07-07T11:27:18+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=38 ttl=53 time=30.276 ms\n","time":"2021-07-07T11:27:19+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=39 ttl=53 time=29.723 ms\n","time":"2021-07-07T11:27:20+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=40 ttl=53 time=29.762 ms\n","time":"2021-07-07T11:27:21+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=41 ttl=53 time=29.207 ms\n","time":"2021-07-07T11:27:22+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=42 ttl=53 time=29.519 ms\n","time":"2021-07-07T11:27:23+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=43 ttl=53 time=135.957 ms\n","time":"2021-07-07T11:27:24+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=44 ttl=53 time=29.306 ms\n","time":"2021-07-07T11:27:25+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=45 ttl=53 time=29.962 ms\n","time":"2021-07-07T11:27:26+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=46 ttl=53 time=30.393 ms\n","time":"2021-07-07T11:27:27+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=47 ttl=53 time=29.343 ms\n","time":"2021-07-07T11:27:28+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=48 ttl=53 time=30.322 ms\n","time":"2021-07-07T11:27:29+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=49 ttl=53 time=89.518 ms\n","time":"2021-07-07T11:27:30+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=50 ttl=53 time=29.296 ms\n","time":"2021-07-07T11:27:31+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=51 ttl=53 time=29.565 ms\n","time":"2021-07-07T11:27:32+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=52 ttl=53 time=29.568 ms\n","time":"2021-07-07T11:27:33+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=53 ttl=53 time=30.646 ms\n","time":"2021-07-07T11:27:34+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=54 ttl=53 time=29.672 ms\n","time":"2021-07-07T11:27:35+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=55 ttl=53 time=77.852 ms\n","time":"2021-07-07T11:27:36+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=56 ttl=53 time=29.535 ms\n","time":"2021-07-07T11:27:37+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=57 ttl=53 time=30.228 ms\n","time":"2021-07-07T11:27:38+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=58 ttl=53 time=30.433 ms\n","time":"2021-07-07T11:27:39+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=59 ttl=53 time=30.382 ms\n","time":"2021-07-07T11:27:40+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=60 ttl=53 time=30.030 ms\n","time":"2021-07-07T11:27:41+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=61 ttl=53 time=29.774 ms\n","time":"2021-07-07T11:27:42+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=62 ttl=53 time=29.540 ms\n","time":"2021-07-07T11:27:43+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=63 ttl=53 time=30.792 ms\n","time":"2021-07-07T11:27:44+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=64 ttl=53 time=227.501 ms\n","time":"2021-07-07T11:27:45+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=65 ttl=53 time=29.574 ms\n","time":"2021-07-07T11:27:46+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=66 ttl=53 time=29.448 ms\n","time":"2021-07-07T11:27:47+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=67 ttl=53 time=30.247 ms\n","time":"2021-07-07T11:27:48+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=68 ttl=53 time=29.376 ms\n","time":"2021-07-07T11:27:49+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=69 ttl=53 time=29.848 ms\n","time":"2021-07-07T11:27:50+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=70 ttl=53 time=30.231 ms\n","time":"2021-07-07T11:27:51+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=71 ttl=53 time=32.427 ms\n","time":"2021-07-07T11:27:52+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=72 ttl=53 time=29.231 ms\n","time":"2021-07-07T11:27:53+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=73 ttl=53 time=148.031 ms\n","time":"2021-07-07T11:27:54+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=74 ttl=53 time=29.459 ms\n","time":"2021-07-07T11:27:55+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=75 ttl=53 time=29.510 ms\n","time":"2021-07-07T11:27:56+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=76 ttl=53 time=397.947 ms\n","time":"2021-07-07T11:27:57+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=77 ttl=53 time=30.545 ms\n","time":"2021-07-07T11:27:58+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=78 ttl=53 time=30.107 ms\n","time":"2021-07-07T11:27:59+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=79 ttl=53 time=44.881 ms\n","time":"2021-07-07T11:28:00+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=80 ttl=53 time=33.161 ms\n","time":"2021-07-07T11:28:01+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=81 ttl=53 time=30.087 ms\n","time":"2021-07-07T11:28:02+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=82 ttl=53 time=31.199 ms\n","time":"2021-07-07T11:28:03+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=83 ttl=53 time=31.833 ms\n","time":"2021-07-07T11:28:04+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=84 ttl=53 time=30.936 ms\n","time":"2021-07-07T11:28:05+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=85 ttl=53 time=31.056 ms\n","time":"2021-07-07T11:28:06+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=86 ttl=53 time=31.968 ms\n","time":"2021-07-07T11:28:07+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=87 ttl=53 time=28.958 ms\n","time":"2021-07-07T11:28:08+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=88 ttl=53 time=217.634 ms\n","time":"2021-07-07T11:28:09+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=89 ttl=53 time=29.638 ms\n","time":"2021-07-07T11:28:10+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=90 ttl=53 time=29.157 ms\n","time":"2021-07-07T11:28:11+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=91 ttl=53 time=29.216 ms\n","time":"2021-07-07T11:28:12+08:00"}
+{"level":"info","msg":"64 bytes from 14.215.177.38: icmp_seq=92 ttl=53 time=30.451 ms\n","time":"2021-07-07T11:28:13+08:00"}

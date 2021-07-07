@@ -1,30 +1,76 @@
 # Pave 部署神器
 
-> 工作流
 
+##### 配置redis
+etc/config.yaml
 ![img.png](example/img.png)
 
-> 开发流程
-- [ ] 工作流
-- [ ] 责任链
-- [ ] git 操作
-- [ ] SHELL
-- [ ] 权限认证
+##### 配置nginx
 
-> 库
 ```
-machinery
-go-git
-casbin
+upstream runner {
+    server 0.0.0.0:8080 weight=1;
+}
+
+server {
+    listen       80;
+    server_name  go.runner.io; # 域名设置
+    access_log   /usr/local/var/log/nginx/runner.log; # 日志目录
+    error_log    /usr/local/var/log/nginx/runner.error.log; # 日志目录
+
+    index index.html index.htm;
+
+    add_header Access-Control-Allow-Origin *;
+    add_header Access-Control-Allow-Methods 'GET, POST, OPTIONS, PUT, DELETE, PATCH';
+    add_header Access-Control-Allow-Headers 'DNT,Keep-Alive,User-Agent,Cache-Control,Content-Type,Authorization,Access-Token';
+    # cors
+    if ($request_method = 'OPTIONS') {
+        return 204;
+    }
+
+    # api
+    location / {
+        client_max_body_size       50m;
+        client_body_buffer_size    128k;
+        proxy_connect_timeout      300;
+        proxy_send_timeout         300;
+        proxy_read_timeout         300;
+        proxy_buffer_size          4k;
+        proxy_buffers              4 32k;
+        proxy_busy_buffers_size    64k;
+        proxy_temp_file_write_size 64k;
+
+        # 将客户端的 Host 和 IP 信息一并转发到对应节点
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header REMOTE-HOST $remote_addr;
+        proxy_set_header HTTP-VIA $http_via;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+        # 转发Cookie，设置 SameSite
+        # proxy_cookie_path / "/; secure; HttpOnly; SameSite=strict";
+        proxy_cookie_path / "/; HttpOnly; SameSite=Lax";
+
+        # 执行代理访问真实服务器
+        proxy_pass http://runner;
+    }
+    
+    # websocket
+    location /ws {
+        proxy_set_header Upgrade "websocket";
+        proxy_set_header Connection "upgrade";
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $host;
+        proxy_http_version 1.1;
+
+        # 转发到多个 ws server
+        proxy_pass http://runner;
+    }
+}
 ```
 
-![img.png](example/img_1.png)
+##### 启动服务
+go run runner.go 或 ./runner
 
-> 测试服发布流程（主动发布）
-
-![img.png](example/img_2.png)
-
-> 生产环境发布（主动发布）
-
-![img.png](example/img_3.png)
-
+##### 访问web目录
+web

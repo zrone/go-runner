@@ -1,0 +1,14 @@
+# 工作目录
+webpath: /Users/zrone/Developments/dtest/runnnn
+# 部署分支
+only:
+  - master
+# pull前运行脚本
+before_script: []
+# pull 完成运行脚本
+script:
+  - cd ${webpath} && pwd
+  - cd ${webpath} && ls
+  - ping www.baidu.com
+# 发布运行脚本
+after_script: []

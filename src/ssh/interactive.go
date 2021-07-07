@@ -13,7 +13,7 @@ import (
 )
 
 func Send(sshClient *ssh.Client, direct string, taskLogrus *logrus.Entry) error {
-	taskLogrus.Println(direct)
+	taskLogrus.Debug(direct)
 
 	//创建ssh-session
 	session, err := sshClient.NewSession()

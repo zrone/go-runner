@@ -46,6 +46,7 @@ func main() {
 	}()
 
 	app := iris.New()
+	app.HandleDir("/web", "./web")
 	app.Handle("POST", "/", handle.DeployHandle)
 	app.Handle("GET", "/ws", handle.WsHandler)
 
@@ -57,12 +58,18 @@ func main() {
 		taskRouter.Post("/proj", handle.ProjCreate)
 		taskRouter.Patch("/proj/{symbol}", handle.ProjUpdate)
 
-		//taskRouter.Get("/console/list")
+		taskRouter.Get("/console/list", handle.ConsoleList)
 		//taskRouter.Post("/console/retry/{uuid}")
 		//taskRouter.Post("/console/cancle/{uuid}")
 	}
+	// api
+	userRouter := app.Party("/user")
+	{
+		userRouter.Post("/login/account", handle.LoginAccount)
+		userRouter.Get("/info/currentUser", handle.CurrentUser)
+	}
 
-	app.Listen(":" + config.Cnf.Port)
+	app.Listen(config.Cnf.Host + ":" + config.Cnf.Port)
 
 	//sql.GetLiteInstance().Create(&types.InternalDeploy{
 	//	Symbol: logr.SnowFlakeId(),

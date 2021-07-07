@@ -13,14 +13,16 @@ import (
 )
 
 type InternalDeploy struct {
-	Symbol string `json:"symbol"`
-	Name   string `json:"name"`
-	Secret string `json:"secret"`
-	Path   string `json:"path"`
-	User   string `json:"user"`
-	Host   string `json:"host"`
-	Port   int    `json:"port"`
-	Pwd    string `json:"pwd,omitempty"`
+	Symbol    string `json:"symbol"`
+	Name      string `json:"name"`
+	Secret    string `json:"secret"`
+	Path      string `json:"path"`
+	Option    uint8  `json:"option"`
+	OriginTag string `json:"origin_tag"`
+	User      string `json:"user"`
+	Host      string `json:"host"`
+	Port      int    `json:"port"`
+	Pwd       string `json:"pwd,omitempty"`
 }
 
 // 项目列表
@@ -60,13 +62,15 @@ func ProjList(ctx iris.Context) {
 
 	for _, item := range list {
 		data = append(data, InternalDeploy{
-			Symbol: item.Symbol,
-			Name:   item.Name,
-			Secret: item.Secret,
-			Path:   item.Path,
-			User:   item.Auth.User,
-			Host:   item.Auth.Host,
-			Port:   item.Auth.Port,
+			Symbol:    item.Symbol,
+			Name:      item.Name,
+			Secret:    item.Secret,
+			Path:      item.Path,
+			Option:    item.Option,
+			OriginTag: item.OriginTag,
+			User:      item.Auth.User,
+			Host:      item.Auth.Host,
+			Port:      item.Auth.Port,
 		})
 	}
 
@@ -91,10 +95,26 @@ func ProjCreate(ctx iris.Context) {
 
 	zh_translations.RegisterDefaultTranslations(validate, trans)
 
+	if body.Option == 1 && body.Secret == "" {
+		ctx.JSON(types.Response{
+			Code:    400,
+			Message: "自动化部署秘钥不能为空",
+		})
+		return
+	} else if body.Option == 2 && body.OriginTag == "" {
+		ctx.JSON(types.Response{
+			Code:    400,
+			Message: "上线发布，branch或tag必须指定",
+		})
+		return
+	}
+
 	internalDeploy := &types.InternalDeploy{
-		Symbol: logr.SnowFlakeId(),
-		Secret: body.Secret,
-		Path:   body.Path,
+		Symbol:    logr.SnowFlakeId(),
+		Secret:    body.Secret,
+		Path:      body.Path,
+		Option:    body.Option,
+		OriginTag: body.OriginTag,
 		Auth: types.Authentication{
 			1,
 			body.User,
@@ -143,6 +163,20 @@ func ProjUpdate(ctx iris.Context) {
 	bodyByte, _ := ctx.GetBody()
 	logr.JSON.Unmarshal(bodyByte, &body)
 
+	if body.Option == 1 && body.Secret == "" {
+		ctx.JSON(types.Response{
+			Code:    400,
+			Message: "自动化部署秘钥不能为空",
+		})
+		return
+	} else if body.Option == 2 && body.OriginTag == "" {
+		ctx.JSON(types.Response{
+			Code:    400,
+			Message: "上线发布，branch或tag必须指定",
+		})
+		return
+	}
+
 	symbol := ctx.Params().Get("symbol")
 	var ext types.InternalDeploy
 	sql.GetLiteInstance().Where("symbol = ?", symbol).Take(&ext)
@@ -160,9 +194,11 @@ func ProjUpdate(ctx iris.Context) {
 	zh_translations.RegisterDefaultTranslations(validate, trans)
 
 	internalDeploy := &types.InternalDeploy{
-		Symbol: symbol,
-		Secret: body.Secret,
-		Path:   body.Path,
+		Symbol:    symbol,
+		Secret:    body.Secret,
+		Path:      body.Path,
+		Option:    body.Option,
+		OriginTag: body.OriginTag,
 		Auth: types.Authentication{
 			1,
 			body.User,

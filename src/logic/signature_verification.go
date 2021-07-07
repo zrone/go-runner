@@ -33,6 +33,7 @@ func SignatureVerification(ctx iris.Context, crypt types.AbstractCrypt) (int, er
 			ref = match[1]
 		}
 
+		logr.Logrus.Printf("当前分支 %s", ref)
 		isAllowBranch, _, params := isAllowBranch(crypt.GetCryptDataConfig(), ref)
 
 		if len(match) > 1 && isAllowBranch {
@@ -42,7 +43,7 @@ func SignatureVerification(ctx iris.Context, crypt types.AbstractCrypt) (int, er
 
 			taskLogrus.SetOutput(taskLog)
 
-			// eta := time.Now().Add(time.Second * 5)
+			eta := time.Now().Add(time.Second * 15)
 			args := []tasks.Arg{
 				{
 					Name:  "UUID",
@@ -80,7 +81,7 @@ func SignatureVerification(ctx iris.Context, crypt types.AbstractCrypt) (int, er
 				UUID: uuid,
 				Name: "call",
 				Args: args,
-				// ETA: &eta,
+				ETA:  &eta,
 				// 重试次数和斐波那契间隔
 				// RetryCount:   3,
 				// RetryTimeout: 15,
@@ -167,7 +168,7 @@ func isAllowBranch(crypt types.CryptDataConfig, ref string) (bool, error, types.
 
 	snowflake := carbon.Now().Format("Ymd") + logr.SnowFlakeId()
 	tempDir := `~/.runner/` + crypt.Symbol + `/` + snowflake
-	if err = interactive.InterSend(sshClient, fmt.Sprintf(`rm -rf %s && mkdir -p %s && cd %s && git init && git remote add origin %s && git config core.sparsecheckout true && echo .runner-ci.yml >> .git/info/sparse-checkout && git pull origin %s`, tempDir, tempDir, tempDir, crypt.Message.Repository.SshUrl, ref)); err != nil {
+	if err = interactive.InterSend(sshClient, fmt.Sprintf(`rm -rf %s && mkdir -p %s && cd %s && git init -b %s && git remote add origin %s && git config core.sparsecheckout true && echo .runner-ci.yml >> .git/info/sparse-checkout && git pull origin %s`, tempDir, tempDir, tempDir, ref, crypt.Message.Repository.SshUrl, ref)); err != nil {
 		return false, err, types.TaskParams{}
 	}
 

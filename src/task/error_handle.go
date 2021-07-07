@@ -7,6 +7,7 @@ import (
 	"awesome-runner/src/sql"
 	"awesome-runner/types"
 	"github.com/RichardKnop/machinery/v2/tasks"
+	"github.com/golang-module/carbon"
 )
 
 func TaskErrorHandle(task *tasks.Signature, err error) {
@@ -15,7 +16,10 @@ func TaskErrorHandle(task *tasks.Signature, err error) {
 		var taskRecord types.TaskLog
 		sql.GetLiteInstance().Take(&taskRecord, "uuid = ?", task.UUID)
 		if taskRecord != (types.TaskLog{}) {
-			sql.GetLiteInstance().Model(&taskRecord).Update("State", `FAILURE`)
+			sql.GetLiteInstance().Model(&taskRecord).Updates(types.TaskLog{
+				State: `FAILURE`,
+				EndAt: carbon.Now().Format("Y-m-d H:i:s"),
+			})
 		}
 
 		// 记录失败任务
