@@ -56,6 +56,8 @@ func Send(sshClient *ssh.Client, direct string, taskLogrus *logrus.Entry, env ma
 	err = session.Run(fmt.Sprintf("%s%s", prefix, direct))
 	wg.Wait()
 	if err != nil {
+		taskLogrus.Errorln(err)
+		taskLogrus.Println("")
 		return err
 	}
 	defer session.Close()
