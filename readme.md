@@ -1,4 +1,4 @@
-# Pave 部署神器
+# Pave 自动化部署
 
 
 ##### 配置redis
@@ -74,3 +74,14 @@ go run runner.go 或 ./runner
 
 ##### 访问web目录
 web
+
+##### 配置项目
+![img1.png](example/img1.png)
+
+##### 说明
+1. 需要配置git sshkey 访问私有库
+2. 部署脚本名称固定 .runner-ci.yml，格式参考项目文件
+3. 配置redis
+4. web默认用户 
+    - admin
+    - 123456
