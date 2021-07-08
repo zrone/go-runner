@@ -4,15 +4,17 @@ import (
 	"awesome-runner/src/logr"
 	"bufio"
 	"errors"
+	"fmt"
 	"github.com/mitchellh/go-homedir"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/ssh"
 	"io"
 	"io/ioutil"
+	"strings"
 	"sync"
 )
 
-func Send(sshClient *ssh.Client, direct string, taskLogrus *logrus.Entry) error {
+func Send(sshClient *ssh.Client, direct string, taskLogrus *logrus.Entry, env map[string]string) error {
 	taskLogrus.Debug(direct)
 
 	//创建ssh-session
@@ -21,6 +23,12 @@ func Send(sshClient *ssh.Client, direct string, taskLogrus *logrus.Entry) error 
 		taskLogrus.Errorln("创建ssh session 失败", err)
 		return errors.New("创建ssh session 失败")
 	}
+	//session.Setenv()
+	var prefix string
+	for name, value := range env {
+		prefix += fmt.Sprintf("%s=%s && ", name, value)
+	}
+
 	defer session.Close()
 
 	stdout, err := session.StdoutPipe()
@@ -37,13 +45,15 @@ func Send(sshClient *ssh.Client, direct string, taskLogrus *logrus.Entry) error 
 			if err != nil || err == io.EOF {
 				return
 			}
+
+			readString = strings.Replace(readString, prefix, "", -1)
 			taskLogrus.Println(readString)
 			// fmt.Print(readString)
 		}
 	}()
 
 	// 打印
-	err = session.Run(direct)
+	err = session.Run(fmt.Sprintf("%s%s", prefix, direct))
 	wg.Wait()
 	if err != nil {
 		return err
@@ -76,6 +86,7 @@ func InterSend(sshClient *ssh.Client, direct string) error {
 				return
 			}
 			logr.Clog.Debug(readString)
+			//fmt.Println(readString)
 		}
 	}()
 

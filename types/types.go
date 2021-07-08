@@ -63,14 +63,16 @@ func (t *InternalDeploy) TableName() string {
 }
 
 type RunnerCi struct {
-	BeforeScript []string `json:"before_script,omitempty"`
-	Script       []string `json:"script,omitempty"`
-	AfterScript  []string `json:"after_script,omitempty"`
-	Webpath      string   `json:"webpath,omitempty"`
-	Only         []string `json:"only,omitempty"`
+	Environment map[string]string `json:"environment,omitempty"`
+	Prepare     []string          `json:"prepare,omitempty"`
+	Script      []string          `json:"script,omitempty"`
+	Release     []string          `json:"release,omitempty"`
+	Webpath     string            `json:"webpath,omitempty"`
+	Only        []string          `json:"only,omitempty"`
 }
 
 type TaskParams struct {
+	Environment  map[string]string
 	BeforeScript []string
 	Script       []string
 	AfterScript  []string

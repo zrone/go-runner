@@ -15,11 +15,14 @@ import (
 	"time"
 )
 
-func Deliver(UUID string, Symbol string, Branch string, BeforeScript []string, Script []string, AfterScript []string) error {
+func Deliver(UUID string, Symbol string, Branch string, Env string, BeforeScript []string, Script []string, AfterScript []string) error {
 	var (
 		internalDeloy types.InternalDeploy
 		taskRecord    types.TaskLog
 	)
+
+	var env map[string]string
+	logr.JSON.Unmarshal([]byte(Env), &env)
 
 	sql.GetLiteInstance().Take(&internalDeloy, "symbol = ?", Symbol)
 	if internalDeloy == (types.InternalDeploy{}) {
@@ -67,10 +70,10 @@ func Deliver(UUID string, Symbol string, Branch string, BeforeScript []string, S
 	taskLogrus.SetOutput(taskLog)
 	tl := taskLogrus.WithContext(ctx)
 
-	tl.Debug("--------- Before script ---------")
+	// tl.Debug("--------- Before script ---------")
 	// 执行 before 脚本 *File
 	for _, b := range BeforeScript {
-		err := interactive.Send(sshClient, b, tl)
+		err := interactive.Send(sshClient, b, tl, env)
 		if err != nil {
 			sql.GetLiteInstance().Model(&taskRecord).Where("uuid = ?", UUID).Updates(types.TaskLog{
 				State: `FAILURE`,
@@ -79,11 +82,20 @@ func Deliver(UUID string, Symbol string, Branch string, BeforeScript []string, S
 			return nil
 		}
 	}
-	tl.Println("")
-	tl.Debug("--------- Deploy script ---------")
+	// tl.Println("")
+	// tl.Debug("--------- Deploy script ---------")
+	// 更新代码
+	if err = interactive.Send(sshClient, fmt.Sprintf(`cd %s && git pull origin %s`, internalDeloy.Path, Branch), tl, env); err != nil {
+		sql.GetLiteInstance().Model(&taskRecord).Where("uuid = ?", UUID).Updates(types.TaskLog{
+			State: `FAILURE`,
+			EndAt: carbon.Now().Format("Y-m-d H:i:s"),
+		})
+		return nil
+	}
+
 	// 执行 main 脚本
 	for _, s := range Script {
-		err := interactive.Send(sshClient, s, tl)
+		err := interactive.Send(sshClient, s, tl, env)
 		if err != nil {
 			sql.GetLiteInstance().Model(&taskRecord).Where("uuid = ?", UUID).Updates(types.TaskLog{
 				State: `FAILURE`,
@@ -92,11 +104,11 @@ func Deliver(UUID string, Symbol string, Branch string, BeforeScript []string, S
 			return nil
 		}
 	}
-	tl.Println("")
-	tl.Debug("--------- After script  ---------")
+	// tl.Println("")
+	// tl.Debug("--------- After script  ---------")
 	// 执行 after 脚本
 	for _, a := range AfterScript {
-		err := interactive.Send(sshClient, a, tl)
+		err := interactive.Send(sshClient, a, tl, env)
 		if err != nil {
 			sql.GetLiteInstance().Model(&taskRecord).Where("uuid = ?", UUID).Updates(types.TaskLog{
 				State: `FAILURE`,
@@ -105,8 +117,8 @@ func Deliver(UUID string, Symbol string, Branch string, BeforeScript []string, S
 			return nil
 		}
 	}
-	tl.Println("")
-	tl.Debug("----------- SUCCESS -------------")
+	// tl.Println("")
+	tl.Debug("success")
 	tl.Println("")
 
 	sql.GetLiteInstance().Model(&taskRecord).Where("uuid = ?", UUID).Updates(types.TaskLog{

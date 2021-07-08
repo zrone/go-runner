@@ -3,12 +3,17 @@ webpath: /Users/zrone/Developments/dtest/runnnn
 # 部署分支
 only:
   - master
+# 环境变量
+environment:
+  workdir: /home/wwwroot/deploy
+  a: b
+  c: d
 # pull前运行脚本
-before_script:
+prepare:
 # pull 完成运行脚本
 script:
   - cd ${webpath} && pwd
-  - cd ${webpath} && ls
-  - cd ${webpath} && ping www.baidu.com
+  - echo ${a}
+  - echo ${b}
 # 发布运行脚本
-after_script:
+release:

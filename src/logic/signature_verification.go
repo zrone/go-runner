@@ -43,7 +43,9 @@ func SignatureVerification(ctx iris.Context, crypt types.AbstractCrypt) (int, er
 
 			taskLogrus.SetOutput(taskLog)
 
-			eta := time.Now().Add(time.Second * 15)
+			env, _ := logr.JSON.Marshal(params.Environment)
+
+			eta := time.Now().Add(time.Second * 5)
 			args := []tasks.Arg{
 				{
 					Name:  "UUID",
@@ -59,6 +61,11 @@ func SignatureVerification(ctx iris.Context, crypt types.AbstractCrypt) (int, er
 					Name:  "Branch",
 					Type:  "string",
 					Value: match[1],
+				},
+				{
+					Name:  "Env",
+					Type:  "string",
+					Value: string(env),
 				},
 				{
 					Name:  "BeforeScript",
@@ -168,7 +175,8 @@ func isAllowBranch(crypt types.CryptDataConfig, ref string) (bool, error, types.
 
 	snowflake := carbon.Now().Format("Ymd") + logr.SnowFlakeId()
 	tempDir := `~/.runner/` + crypt.Symbol + `/` + snowflake
-	if err = interactive.InterSend(sshClient, fmt.Sprintf(`rm -rf %s && mkdir -p %s && cd %s && git init -b %s && git remote add origin %s && git config core.sparsecheckout true && echo .runner-ci.yml >> .git/info/sparse-checkout && git pull origin %s`, tempDir, tempDir, tempDir, ref, crypt.Message.Repository.SshUrl, ref)); err != nil {
+	if err = interactive.InterSend(sshClient, fmt.Sprintf(`rm -rf %s && mkdir -p %s && cd %s && git init && git checkout -b %s && git remote add origin %s && git config core.sparsecheckout true && echo .runner-ci.yml >> .git/info/sparse-checkout && git pull origin %s`, tempDir, tempDir, tempDir, ref, crypt.Message.Repository.SshUrl, ref)); err != nil {
+		logr.Clog.Errorf("检查部署配置异常, %v", err)
 		return false, err, types.TaskParams{}
 	}
 
@@ -185,9 +193,10 @@ func isAllowBranch(crypt types.CryptDataConfig, ref string) (bool, error, types.
 	var (
 		isContain bool             = false
 		taskParam types.TaskParams = types.TaskParams{
-			runnerCi.BeforeScript,
+			runnerCi.Environment,
+			runnerCi.Prepare,
 			runnerCi.Script,
-			runnerCi.AfterScript,
+			runnerCi.Release,
 		}
 	)
 
