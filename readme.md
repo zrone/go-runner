@@ -82,5 +82,15 @@ web默认用户
 ![img1.png](example/img1.png)
 
 ##### 说明
-1. 需要配置git sshkey 访问私有库
-2. 部署脚本名称固定 .runner-ci.yml，格式参考项目文件
+1. etc/config.yaml
+   
+   | 参数     | 说明                                  |
+   | -------- | ------------------------------------- |
+   | Host     | 主机HOST，默认 127.0.0.1              |
+   | Port     | 默认启动端口, 默认 8080               |
+   | Domain   | webhook  通知地址，自动化部署需要配置 |
+   | RedisDNS | redis配置                             |
+   | QueueDNS | redis配置                             |
+   
+2. 配置git sshkey
+3. 部署脚本名称固定 .runner-ci.yml，格式参考项目文件

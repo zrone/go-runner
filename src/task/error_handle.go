@@ -18,7 +18,7 @@ func TaskErrorHandle(task *tasks.Signature, err error) {
 		if taskRecord != (types.TaskLog{}) {
 			sql.GetLiteInstance().Model(&taskRecord).Updates(types.TaskLog{
 				State: `FAILURE`,
-				EndAt: carbon.Now().Format("Y-m-d H:i:s"),
+				EndAt: carbon.Now().ToTimestamp(),
 			})
 		}
 

@@ -53,13 +53,20 @@ func main() {
 	// api
 	taskRouter := app.Party("/task")
 	{
+		// 自动化部署
 		taskRouter.Get("/proj/list", handle.ProjList)
 		taskRouter.Delete("/proj/{symbol}", handle.ProjDelete)
 		taskRouter.Post("/proj", handle.ProjCreate)
 		taskRouter.Patch("/proj/{symbol}", handle.ProjUpdate)
-
 		taskRouter.Get("/console/list", handle.ConsoleList)
-		//taskRouter.Post("/console/retry/{uuid}")
+
+		// 发布上线单
+		taskRouter.Post("/proj/publish", handle.TaskPublish)
+		taskRouter.Get("/release/list", handle.ReleaseList)
+
+		// 用户
+
+		taskRouter.Post("/retry/{symbol}", handle.Retry)
 		//taskRouter.Post("/console/cancle/{uuid}")
 	}
 	// api
@@ -70,19 +77,4 @@ func main() {
 	}
 
 	app.Listen(config.Cnf.Host + ":" + config.Cnf.Port)
-
-	//sql.GetLiteInstance().Create(&types.InternalDeploy{
-	//	Symbol: logr.SnowFlakeId(),
-	//	Secret: "9b84cce730b4ddec467ac439f0ec5c3dec08a743",
-	//	Path:   "/www/wwwroot/demo",
-	//	Auth: types.Authentication{
-	//		1,
-	//		"zrone",
-	//		"localhost",
-	//		22,
-	//		"bluestone",
-	//	},
-	//	IsDelete: false,
-	//	Name:     "demo",
-	//})
 }

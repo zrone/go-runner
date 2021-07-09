@@ -2,6 +2,9 @@
 Host: "127.0.0.1"
 Port: "8080"
 
+# 自动化部署回调域名，根域名
+Domain: "http://deploy.ngrok.wihens.com"
+
 # mysql (忽略配置，暂未用到)
 MysqlDNS: mysql://root:123456@tcp(127.0.0.1:3306)/pave?charset=utf8mb4&parseTime=True&loc=Local
 TimeZone: Asia/Shanghai

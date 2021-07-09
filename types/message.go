@@ -6,6 +6,8 @@ const (
 
 type Message struct {
 	Ref        string     `json:"ref"`
+	After      string     `json:"after"`
+	UserName   string     `json:"user_name"`
 	Repository Repository `json:"repository"`
 }
 

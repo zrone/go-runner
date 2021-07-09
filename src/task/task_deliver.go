@@ -32,7 +32,7 @@ func Deliver(UUID string, Symbol string, Branch string, Env string, BeforeScript
 
 	sql.GetLiteInstance().Model(&taskRecord).Where("uuid = ?", UUID).Updates(types.TaskLog{
 		State: `RUNNING`,
-		EndAt: carbon.Now().Format("Y-m-d H:i:s"),
+		EndAt: carbon.Now().ToTimestamp(),
 	})
 
 	// 链接SSH
@@ -77,7 +77,7 @@ func Deliver(UUID string, Symbol string, Branch string, Env string, BeforeScript
 		if err != nil {
 			sql.GetLiteInstance().Model(&taskRecord).Where("uuid = ?", UUID).Updates(types.TaskLog{
 				State: `FAILURE`,
-				EndAt: carbon.Now().Format("Y-m-d H:i:s"),
+				EndAt: carbon.Now().ToTimestamp(),
 			})
 			return nil
 		}
@@ -88,7 +88,7 @@ func Deliver(UUID string, Symbol string, Branch string, Env string, BeforeScript
 	if err = interactive.Send(sshClient, fmt.Sprintf(`cd %s && git pull origin %s`, internalDeloy.Path, Branch), tl, env); err != nil {
 		sql.GetLiteInstance().Model(&taskRecord).Where("uuid = ?", UUID).Updates(types.TaskLog{
 			State: `FAILURE`,
-			EndAt: carbon.Now().Format("Y-m-d H:i:s"),
+			EndAt: carbon.Now().ToTimestamp(),
 		})
 		return nil
 	}
@@ -99,7 +99,7 @@ func Deliver(UUID string, Symbol string, Branch string, Env string, BeforeScript
 		if err != nil {
 			sql.GetLiteInstance().Model(&taskRecord).Where("uuid = ?", UUID).Updates(types.TaskLog{
 				State: `FAILURE`,
-				EndAt: carbon.Now().Format("Y-m-d H:i:s"),
+				EndAt: carbon.Now().ToTimestamp(),
 			})
 			return nil
 		}
@@ -112,7 +112,7 @@ func Deliver(UUID string, Symbol string, Branch string, Env string, BeforeScript
 		if err != nil {
 			sql.GetLiteInstance().Model(&taskRecord).Where("uuid = ?", UUID).Updates(types.TaskLog{
 				State: `FAILURE`,
-				EndAt: carbon.Now().Format("Y-m-d H:i:s"),
+				EndAt: carbon.Now().ToTimestamp(),
 			})
 			return nil
 		}
@@ -123,7 +123,7 @@ func Deliver(UUID string, Symbol string, Branch string, Env string, BeforeScript
 
 	sql.GetLiteInstance().Model(&taskRecord).Where("uuid = ?", UUID).Updates(types.TaskLog{
 		State: `SUCCESS`,
-		EndAt: carbon.Now().Format("Y-m-d H:i:s"),
+		EndAt: carbon.Now().ToTimestamp(),
 	})
 	return nil
 }

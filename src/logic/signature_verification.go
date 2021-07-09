@@ -45,7 +45,7 @@ func SignatureVerification(ctx iris.Context, crypt types.AbstractCrypt) (int, er
 
 			env, _ := logr.JSON.Marshal(params.Environment)
 
-			eta := time.Now().Add(time.Second * 5)
+			eta := time.Now().Add(time.Second * 3)
 			args := []tasks.Arg{
 				{
 					Name:  "UUID",
@@ -95,27 +95,25 @@ func SignatureVerification(ctx iris.Context, crypt types.AbstractCrypt) (int, er
 			}
 
 			argsString, _ := logr.JSON.Marshal(args)
+			tl := types.TaskLog{
+				Symbol:    crypt.GetCryptDataConfig().InternalDeloy.Symbol,
+				Committer: crypt.GetCryptDataConfig().Message.UserName,
+				Version:   string([]byte(crypt.GetCryptDataConfig().Message.After)[:7]),
+				Uuid:      uuid,
+				CreateAt:  carbon.Now().ToTimestamp(),
+				Args:      string(argsString),
+				Type:      1,
+			}
 
 			if _, err := queue.MachineryServer.SendTask(signature); err != nil {
-				sql.GetLiteInstance().Create(&types.TaskLog{
-					Symbol:   crypt.GetCryptDataConfig().InternalDeloy.Symbol,
-					Uuid:     uuid,
-					CreateAt: carbon.Now().Format("Y-m-d H:i:s"),
-					State:    "FAILURE",
-					Args:     string(argsString),
-				})
+				tl.State = "FAILURE"
+				sql.GetLiteInstance().Create(&tl)
 
 				taskLogrus.Errorf("Failed task delivered，%v", err)
 				logr.Clog.Errorf("Failed task delivered，%v", err)
 			} else {
-				//
-				sql.GetLiteInstance().Create(&types.TaskLog{
-					Symbol:   crypt.GetCryptDataConfig().InternalDeloy.Symbol,
-					Uuid:     uuid,
-					CreateAt: carbon.Now().Format("Y-m-d H:i:s"),
-					State:    "PENDING",
-					Args:     string(argsString),
-				})
+				tl.State = "PENDING"
+				sql.GetLiteInstance().Create(&tl)
 
 				return ctx.JSON(types.Response{
 					200,
@@ -168,7 +166,7 @@ func isAllowBranch(crypt types.CryptDataConfig, ref string) (bool, error, types.
 	addr := fmt.Sprintf("%s:%d", sshHost, sshPort)
 	sshClient, err := ssh.Dial("tcp", addr, config)
 	if err != nil {
-		logr.Clog.Errorf("创建ssh client 失败", err)
+		logr.Clog.Errorf("创建ssh client 失败, %v", err)
 		return false, err, types.TaskParams{}
 	}
 	defer sshClient.Close()
