@@ -3,12 +3,13 @@ package queue
 import (
 	config2 "awesome-runner/src/config"
 	"awesome-runner/src/task"
+	"sync"
+
 	"github.com/RichardKnop/machinery/v2"
 	redisbackend "github.com/RichardKnop/machinery/v2/backends/redis"
 	redisbroker "github.com/RichardKnop/machinery/v2/brokers/redis"
 	"github.com/RichardKnop/machinery/v2/config"
 	eagerlock "github.com/RichardKnop/machinery/v2/locks/eager"
-	"sync"
 )
 
 var (
@@ -35,8 +36,8 @@ func initMachinery() {
 		},
 	}
 
-	broker := redisbroker.NewGR(cnf, []string{config2.Cnf.QueueDNS}, config2.Cnf.QueueDb)
-	backend := redisbackend.NewGR(cnf, []string{config2.Cnf.QueueDNS}, config2.Cnf.QueueDb)
+	broker := redisbroker.NewGR(cnf, []string{config2.Cnf.RedisDNS}, config2.Cnf.QueueDb)
+	backend := redisbackend.NewGR(cnf, []string{config2.Cnf.RedisDNS}, config2.Cnf.QueueDb)
 	lock := eagerlock.New()
 	MachineryServer = machinery.NewServer(cnf, broker, backend, lock)
 

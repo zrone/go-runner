@@ -2,7 +2,7 @@
 Host: "127.0.0.1"
 Port: "8080"
 
-# 自动化部署回调域名，根域名
+# 自动化部署回调域名，根域名，如www.gn.com/www.ol.com
 Domain: "http://deploy.ngrok.wihens.com"
 
 # mysql (忽略配置，暂未用到)
@@ -10,9 +10,10 @@ MysqlDNS: mysql://root:123456@tcp(127.0.0.1:3306)/pave?charset=utf8mb4&parseTime
 TimeZone: Asia/Shanghai
 
 # redis
-RedisDNS: redis://61c07e1ae08d08a2@127.0.0.1:6379/1
-
+RedisDNS: 61c07e1ae08d08a2@127.0.0.1:6379
+# default
+DefaultDb: 1
 # machinery
-QueueDNS: 61c07e1ae08d08a2@127.0.0.1:6379
 QueueDb: 12
+# work 
 WorkNumber: 1

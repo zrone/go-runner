@@ -2,3 +2,7 @@ vendor/
 go.sum
 runtime/git/*.yml
 runtime/task/*.log
+runtime/*.log
+.idea/
+.vscode/
+awesome-runner

@@ -8,6 +8,12 @@ import (
 	interactive "awesome-runner/src/ssh"
 	"awesome-runner/types"
 	"fmt"
+	"os"
+	"os/exec"
+	"strings"
+	"sync"
+	"time"
+
 	"github.com/RichardKnop/machinery/v2/tasks"
 	"github.com/go-playground/locales/zh"
 	ut "github.com/go-playground/universal-translator"
@@ -17,11 +23,6 @@ import (
 	"github.com/kataras/iris/v12"
 	taskLogrus "github.com/sirupsen/logrus"
 	"golang.org/x/crypto/ssh"
-	"os"
-	"os/exec"
-	"strings"
-	"sync"
-	"time"
 )
 
 type InternalDeploy struct {
@@ -134,11 +135,11 @@ func ProjCreate(ctx iris.Context) {
 		Path:   body.Path,
 		Option: body.Option,
 		Auth: types.Authentication{
-			1,
-			body.User,
-			body.Host,
-			body.Port,
-			body.Pwd,
+			Scheme: 1,
+			User:   body.User,
+			Host:   body.Host,
+			Port:   body.Port,
+			Pwd:    body.Pwd,
 		},
 		IsDelete: false,
 		Name:     body.Name,
@@ -211,11 +212,11 @@ func ProjUpdate(ctx iris.Context) {
 		Path:   body.Path,
 		Option: body.Option,
 		Auth: types.Authentication{
-			1,
-			body.User,
-			body.Host,
-			body.Port,
-			func(pwd string) string {
+			Scheme: 1,
+			User:   body.User,
+			Host:   body.Host,
+			Port:   body.Port,
+			Pwd: func(pwd string) string {
 				if pwd == "" {
 					return ext.Auth.Pwd
 				}
@@ -432,17 +433,17 @@ func delivered(ctx iris.Context, crypt types.AbstractCrypt, body ReleaseBody, pa
 		logr.Clog.Errorf("Failed task delivered，%v", err)
 
 		ctx.JSON(types.Response{
-			400,
-			"fail",
-			nil,
+			Code:    400,
+			Message: "fail",
+			Data:    nil,
 		})
 	} else {
 		tl.State = "PENDING"
 		sql.GetLiteInstance().Create(&tl)
 		ctx.JSON(types.Response{
-			200,
-			"Success task " + uuid + " delivered",
-			nil,
+			Code:    200,
+			Message: "Success task " + uuid + " delivered",
+			Data:    nil,
 		})
 	}
 }
@@ -511,10 +512,10 @@ func queryRepo(internalDeloy types.InternalDeploy, body ReleaseBody) ([]string, 
 	config.ParseYaml(fmt.Sprintf("runtime/git/%s.runner-ci.yml", snowflake), &runnerCi)
 	var (
 		taskParam types.TaskParams = types.TaskParams{
-			runnerCi.Environment,
-			runnerCi.Prepare,
-			runnerCi.Script,
-			runnerCi.Release,
+			Environment:  runnerCi.Environment,
+			BeforeScript: runnerCi.Prepare,
+			Script:       runnerCi.Script,
+			AfterScript:  runnerCi.Release,
 		}
 	)
 

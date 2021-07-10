@@ -5,9 +5,10 @@ import (
 	"awesome-runner/src/logr"
 	"awesome-runner/src/sql"
 	"awesome-runner/types"
-	"github.com/kataras/iris/v12"
 	"strconv"
 	"strings"
+
+	"github.com/kataras/iris/v12"
 )
 
 // 发送部署任务
@@ -24,9 +25,9 @@ func DeployHandle(ctx iris.Context) {
 
 	if symbol == "" {
 		ctx.JSON(types.Response{
-			400,
-			"Unknown symbol",
-			nil,
+			Code:    400,
+			Message: "Unknown symbol",
+			Data:    nil,
 		})
 		return
 	}
@@ -36,19 +37,19 @@ func DeployHandle(ctx iris.Context) {
 	sql.GetLiteInstance().Take(&internalDeloy, "symbol = ?", symbol)
 	if internalDeloy == (types.InternalDeploy{}) {
 		ctx.JSON(types.Response{
-			400,
-			"Unknown symbol",
-			nil,
+			Code:    400,
+			Message: "Unknown symbol",
+			Data:    nil,
 		})
 		return
 	}
 
 	if internalDeloy.Option != 1 {
 		ctx.JSON(types.Response{
-			400,
+			Code: 400,
 			// "Invalid Project Option",
-			"当前项目为上线发布类型，不支持自动化部署",
-			nil,
+			Message: "当前项目为上线发布类型，不支持自动化部署",
+			Data:    nil,
 		})
 		return
 	}

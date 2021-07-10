@@ -2,8 +2,10 @@ package cache
 
 import (
 	"awesome-runner/src/config"
-	"github.com/go-redis/redis/v8"
+	"fmt"
 	"sync"
+
+	"github.com/go-redis/redis/v8"
 )
 
 var (
@@ -11,7 +13,7 @@ var (
 )
 
 func initRedisClient() *redis.Client {
-	options, _ := redis.ParseURL(config.Cnf.RedisDNS)
+	options, _ := redis.ParseURL(fmt.Sprintf(`redis://%s/%d`, config.Cnf.RedisDNS, config.Cnf.DefaultDb))
 	options.PoolSize = 20
 	options.MinIdleConns = 10
 

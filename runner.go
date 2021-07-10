@@ -7,11 +7,19 @@ import (
 	"awesome-runner/src/logr"
 	"awesome-runner/src/queue"
 	"flag"
+	"time"
+
 	"github.com/kataras/iris/v12"
+	"github.com/kataras/iris/v12/sessions"
 )
 
 var (
 	configFile = flag.String("f", "etc/config.yaml", "the config file")
+	sessionID  = "IRISSESSIONID"
+	sess       = sessions.New(sessions.Config{
+		Cookie:  sessionID,
+		Expires: time.Hour,
+	})
 )
 
 func main() {
@@ -46,12 +54,27 @@ func main() {
 	}()
 
 	app := iris.New()
+	// 405
+	app.OnAnyErrorCode(func(ctx iris.Context) {
+		errMessage := map[int]string{
+			405: "Method not allowed",
+			404: "Not found",
+			500: "Server error",
+		}
+
+		ctx.JSON(iris.Map{
+			"code":    ctx.GetStatusCode(),
+			"message": errMessage[ctx.GetStatusCode()],
+		})
+	})
+
+	app.UseGlobal(sess.Handler())
 	app.HandleDir("/web", "./web")
 	app.Handle("POST", "/", handle.DeployHandle)
 	app.Handle("GET", "/ws", handle.WsHandler)
 
 	// api
-	taskRouter := app.Party("/task")
+	taskRouter := app.Party("/task", SecurityMiddleware)
 	{
 		// 自动化部署
 		taskRouter.Get("/proj/list", handle.ProjList)
@@ -72,9 +95,32 @@ func main() {
 	// api
 	userRouter := app.Party("/user")
 	{
+		userRouter.Get("/list", SecurityMiddleware, handle.UserList)
+		userRouter.Post("/handle", SecurityMiddleware, handle.UserCreate)
+		userRouter.Patch("/handle/{id:int64}", SecurityMiddleware, handle.UserUpdate)
+		userRouter.Delete("/handle/{id:int64}", SecurityMiddleware, handle.UserDelete)
+
+		userRouter.Get("/info/currentUser", SecurityMiddleware, handle.CurrentUser)
+		userRouter.Get("/logout", SecurityMiddleware, handle.Logout)
 		userRouter.Post("/login/account", handle.LoginAccount)
-		userRouter.Get("/info/currentUser", handle.CurrentUser)
 	}
 
 	app.Listen(config.Cnf.Host + ":" + config.Cnf.Port)
+}
+
+// passport
+func SecurityMiddleware(ctx iris.Context) {
+	session := sessions.Get(ctx)
+
+	isLogin, err := session.GetBoolean("Runner:Login")
+	if err != nil || !isLogin {
+		ctx.JSON(iris.Map{
+			"currentAuthority": "guest",
+			"status":           "error",
+			"type":             "account",
+		})
+		return
+	}
+
+	ctx.Next()
 }

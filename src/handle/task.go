@@ -5,11 +5,12 @@ import (
 	"awesome-runner/src/queue"
 	"awesome-runner/src/sql"
 	"awesome-runner/types"
+	"time"
+
 	"github.com/RichardKnop/machinery/v2/tasks"
 	"github.com/golang-module/carbon"
 	"github.com/kataras/iris/v12"
 	taskLogrus "github.com/sirupsen/logrus"
-	"time"
 )
 
 // 重试
@@ -82,9 +83,9 @@ func Retry(ctx iris.Context) {
 		sql.GetLiteInstance().Create(&tl)
 
 		ctx.JSON(types.Response{
-			200,
-			"Success task " + uuid + " delivered",
-			nil,
+			Code:    200,
+			Message: "Success task " + uuid + " delivered",
+			Data:    nil,
 		})
 	}
 }

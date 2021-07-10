@@ -8,16 +8,17 @@ import (
 	interactive "awesome-runner/src/ssh"
 	"awesome-runner/types"
 	"fmt"
-	"github.com/RichardKnop/machinery/v2/tasks"
-	"github.com/golang-module/carbon"
-	"github.com/kataras/iris/v12"
-	taskLogrus "github.com/sirupsen/logrus"
-	"golang.org/x/crypto/ssh"
 	"os"
 	"os/exec"
 	"regexp"
 	"strings"
 	"time"
+
+	"github.com/RichardKnop/machinery/v2/tasks"
+	"github.com/golang-module/carbon"
+	"github.com/kataras/iris/v12"
+	taskLogrus "github.com/sirupsen/logrus"
+	"golang.org/x/crypto/ssh"
 )
 
 // 签名验证
@@ -116,26 +117,26 @@ func SignatureVerification(ctx iris.Context, crypt types.AbstractCrypt) (int, er
 				sql.GetLiteInstance().Create(&tl)
 
 				return ctx.JSON(types.Response{
-					200,
-					"Success task " + uuid + " delivered",
-					nil,
+					Code:    200,
+					Message: "Success task " + uuid + " delivered",
+					Data:    nil,
 				})
 			}
 		}
 
 		if !isAllowBranch {
 			return ctx.JSON(types.Response{
-				200,
-				"Unnecessary deployment",
-				nil,
+				Code:    200,
+				Message: "Unnecessary deployment",
+				Data:    nil,
 			})
 		}
 	}
 
 	return ctx.JSON(types.Response{
-		400,
-		"Invalid signature",
-		nil,
+		Code:    400,
+		Message: "Invalid signature",
+		Data:    nil,
 	})
 }
 
@@ -191,10 +192,10 @@ func isAllowBranch(crypt types.CryptDataConfig, ref string) (bool, error, types.
 	var (
 		isContain bool             = false
 		taskParam types.TaskParams = types.TaskParams{
-			runnerCi.Environment,
-			runnerCi.Prepare,
-			runnerCi.Script,
-			runnerCi.Release,
+			Environment:  runnerCi.Environment,
+			BeforeScript: runnerCi.Prepare,
+			Script:       runnerCi.Script,
+			AfterScript:  runnerCi.Release,
 		}
 	)
 

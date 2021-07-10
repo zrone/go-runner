@@ -4,14 +4,15 @@ go 1.15
 
 require (
 	github.com/RichardKnop/machinery/v2 v2.0.11
-	github.com/go-git/go-git/v5 v5.4.2
+	github.com/go-git/go-git/v5 v5.4.2 // indirect
 	github.com/go-playground/locales v0.13.0
 	github.com/go-playground/universal-translator v0.17.0
 	github.com/go-playground/validator/v10 v10.6.1
 	github.com/go-redis/redis/v8 v8.10.0
 	github.com/golang-module/carbon v1.4.0
-	github.com/gorilla/websocket v1.4.1
+	github.com/gorilla/websocket v1.4.2
 	github.com/json-iterator/go v1.1.11
+	github.com/kataras/iris v0.0.2 // indirect
 	github.com/kataras/iris/v12 v12.1.8
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
 	github.com/lestrrat-go/strftime v1.0.4 // indirect

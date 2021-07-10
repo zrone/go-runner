@@ -1,5 +1,6 @@
 package types
 
+// 运行配置
 type Config struct {
 	Domain     string
 	Host       string
@@ -8,7 +9,7 @@ type Config struct {
 	TimeZone   string
 	RedisDNS   string
 	WorkNumber int
-	QueueDNS   string
+	DefaultDb  int
 	QueueDb    int
 }
 
@@ -40,8 +41,12 @@ type TaskLog struct {
 // manager
 type Manager struct {
 	ID       int64  `json:"id" gorm:"primaryKey;autoIncrement:true"`
-	UserName string `json:"user_name"`
-	Password string `json:"password"`
+	UserName string `json:"user_name" gorm:"uniqueIndex" validate:"required,min=3"`
+	Salt     string `json:"-"`
+	Password string `json:"password" validate:"required,min=6"`
+	IsDelete bool   `json:"-"`
+	CreateAt int64  `json:"create_at"`
+	UpdateAt int64  `json:"update_at"`
 }
 
 type Authentication struct {
