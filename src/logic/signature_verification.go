@@ -151,7 +151,7 @@ func isAllowBranch(crypt types.CryptDataConfig, ref string) (bool, error, types.
 	sshKeyPath := "id_rsa path" //ssh id_rsa.id 路径"
 	sshPort := crypt.Project.Auth.Port
 
-	//创建sshp登陆配置
+	//创建ssh登陆配置
 	config := &ssh.ClientConfig{
 		Timeout:         time.Second,
 		User:            sshUser,

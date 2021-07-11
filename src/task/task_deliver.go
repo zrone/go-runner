@@ -8,11 +8,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os"
+	"time"
+
 	"github.com/golang-module/carbon"
 	taskLogrus "github.com/sirupsen/logrus"
 	"golang.org/x/crypto/ssh"
-	"os"
-	"time"
 )
 
 func Deliver(UUID string, Symbol string, Branch string, Env string, BeforeScript []string, Script []string, AfterScript []string) error {
@@ -43,7 +44,7 @@ func Deliver(UUID string, Symbol string, Branch string, Env string, BeforeScript
 	sshKeyPath := "id_rsa path" //ssh id_rsa.id 路径"
 	sshPort := internalDeloy.Auth.Port
 
-	//创建sshp登陆配置
+	//创建ssh登陆配置
 	config := &ssh.ClientConfig{
 		Timeout:         time.Second,
 		User:            sshUser,

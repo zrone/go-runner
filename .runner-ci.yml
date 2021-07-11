@@ -3,6 +3,8 @@ webpath: /Users/zrone/Developments/dtest/runnnn
 # 部署分支
 only:
   - master
+  - dev
+  - test
 # 环境变量
 environment:
   workdir: /home/wwwroot/deploy
@@ -10,6 +12,7 @@ environment:
   c: d
 # pull前运行脚本
 prepare:
+  - nginx -s stop
 # pull 完成运行脚本
 script:
   - cd ${webpath} && pwd
@@ -17,3 +20,5 @@ script:
   - echo ${b}
 # 发布运行脚本
 release:
+  - nginx 
+  - netstae -tunlp | grep 8080

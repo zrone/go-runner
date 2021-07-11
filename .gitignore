@@ -6,3 +6,4 @@ runtime/*.log
 .idea/
 .vscode/
 awesome-runner
+.DS_Store
