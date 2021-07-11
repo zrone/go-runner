@@ -5,22 +5,24 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
-	"github.com/mitchellh/go-homedir"
-	"github.com/sirupsen/logrus"
-	"golang.org/x/crypto/ssh"
 	"io"
 	"io/ioutil"
 	"strings"
 	"sync"
+
+	"github.com/golang-module/carbon"
+	"github.com/mitchellh/go-homedir"
+	"github.com/sirupsen/logrus"
+	"golang.org/x/crypto/ssh"
 )
 
 func Send(sshClient *ssh.Client, direct string, taskLogrus *logrus.Entry, env map[string]string) error {
-	taskLogrus.Debug(direct)
+	taskLogrus.Debug(fmt.Sprintf(`%s %s`, carbon.Now().ToTimeString(), direct))
 
 	//创建ssh-session
 	session, err := sshClient.NewSession()
 	if err != nil {
-		taskLogrus.Errorln("创建ssh session 失败", err)
+		taskLogrus.Errorf(fmt.Sprintf("%s %s:%v", carbon.Now().ToTimeString(), "创建ssh session 失败", err))
 		return errors.New("创建ssh session 失败")
 	}
 	//session.Setenv()
@@ -47,7 +49,7 @@ func Send(sshClient *ssh.Client, direct string, taskLogrus *logrus.Entry, env ma
 			}
 
 			readString = strings.Replace(readString, prefix, "", -1)
-			taskLogrus.Println(readString)
+			taskLogrus.Println(fmt.Sprintf(`%s %s`, carbon.Now().ToTimeString(), readString))
 			// fmt.Print(readString)
 		}
 	}()
@@ -56,7 +58,7 @@ func Send(sshClient *ssh.Client, direct string, taskLogrus *logrus.Entry, env ma
 	err = session.Run(fmt.Sprintf("%s%s", prefix, direct))
 	wg.Wait()
 	if err != nil {
-		taskLogrus.Errorln(err)
+		taskLogrus.Errorln(fmt.Sprintf(`%s %v`, carbon.Now().ToTimeString(), err))
 		taskLogrus.Println("")
 		return err
 	}

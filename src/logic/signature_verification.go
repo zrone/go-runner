@@ -17,6 +17,7 @@ import (
 	"github.com/RichardKnop/machinery/v2/tasks"
 	"github.com/golang-module/carbon"
 	"github.com/kataras/iris/v12"
+	"github.com/mitchellh/go-homedir"
 	taskLogrus "github.com/sirupsen/logrus"
 	"golang.org/x/crypto/ssh"
 )
@@ -173,7 +174,9 @@ func isAllowBranch(crypt types.CryptDataConfig, ref string) (bool, error, types.
 	defer sshClient.Close()
 
 	snowflake := carbon.Now().Format("Ymd") + logr.SnowFlakeId()
-	tempDir := `~/.runner/` + crypt.Symbol + `/` + snowflake
+	// 用户根目录
+	userRootDir, _ := homedir.Dir()
+	tempDir := fmt.Sprintf(`%s/.runner/%s/%s`, userRootDir, crypt.Symbol, snowflake)
 	if err = interactive.InterSend(sshClient, fmt.Sprintf(`rm -rf %s && mkdir -p %s && cd %s && git init && git checkout -b %s && git remote add origin %s && git config core.sparsecheckout true && echo .runner-ci.yml >> .git/info/sparse-checkout && git pull origin %s`, tempDir, tempDir, tempDir, ref, crypt.Message.Repository.SshUrl, ref)); err != nil {
 		logr.Clog.Errorf("检查部署配置异常, %v", err)
 		return false, err, types.TaskParams{}
@@ -187,7 +190,7 @@ func isAllowBranch(crypt types.CryptDataConfig, ref string) (bool, error, types.
 	var (
 		runnerCi types.RunnerCi
 	)
-
+	// 解析部署脚本
 	conf.ParseYaml(fmt.Sprintf("runtime/git/%s.runner-ci.yml", snowflake), &runnerCi)
 	var (
 		isContain bool             = false

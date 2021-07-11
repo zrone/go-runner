@@ -22,6 +22,14 @@ func Deliver(UUID string, Symbol string, Branch string, Env string, BeforeScript
 		taskRecord    types.TaskLog
 	)
 
+	// log
+	ctx := context.Background()
+	taskLog, _ := os.OpenFile("runtime/task/"+UUID+".log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	defer taskLog.Close()
+	taskLogrus.SetOutput(taskLog)
+	tl := taskLogrus.WithContext(ctx)
+
+	// environment
 	var env map[string]string
 	logr.JSON.Unmarshal([]byte(Env), &env)
 
@@ -60,16 +68,10 @@ func Deliver(UUID string, Symbol string, Branch string, Env string, BeforeScript
 	addr := fmt.Sprintf("%s:%d", sshHost, sshPort)
 	sshClient, err := ssh.Dial("tcp", addr, config)
 	if err != nil {
-		taskLogrus.Errorf("创建ssh client 失败", err)
-		logr.Logrus.Errorf("创建ssh client 失败", err)
+		taskLogrus.Errorf("创建ssh client 失败, %v", err)
+		logr.Logrus.Errorf("创建ssh client 失败, %v", err)
 	}
 	defer sshClient.Close()
-
-	ctx := context.Background()
-	taskLog, _ := os.OpenFile("runtime/task/"+UUID+".log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
-	defer taskLog.Close()
-	taskLogrus.SetOutput(taskLog)
-	tl := taskLogrus.WithContext(ctx)
 
 	// tl.Debug("--------- Before script ---------")
 	// 执行 before 脚本 *File
@@ -119,7 +121,7 @@ func Deliver(UUID string, Symbol string, Branch string, Env string, BeforeScript
 		}
 	}
 	// tl.Println("")
-	tl.Debug("success")
+	tl.Debug(fmt.Sprintf(`%s %s`, carbon.Now().ToTimeString(), "success"))
 	tl.Println("")
 
 	sql.GetLiteInstance().Model(&taskRecord).Where("uuid = ?", UUID).Updates(types.TaskLog{
