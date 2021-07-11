@@ -36,7 +36,7 @@ func SignatureVerification(ctx iris.Context, crypt types.AbstractCrypt) (int, er
 		}
 
 		logr.Logrus.Printf("当前分支 %s", ref)
-		isAllowBranch, _, params := isAllowBranch(crypt.GetCryptDataConfig(), ref)
+		isAllowBranch, err, params := isAllowBranch(crypt.GetCryptDataConfig(), ref)
 
 		if len(match) > 1 && isAllowBranch {
 			uuid := logr.SnowFlakeId()
@@ -128,7 +128,7 @@ func SignatureVerification(ctx iris.Context, crypt types.AbstractCrypt) (int, er
 		if !isAllowBranch {
 			return ctx.JSON(types.Response{
 				Code:    200,
-				Message: "Unnecessary deployment",
+				Message: err.Error(),
 				Data:    nil,
 			})
 		}
@@ -154,7 +154,7 @@ func isAllowBranch(crypt types.CryptDataConfig, ref string) (bool, error, types.
 
 	//创建ssh登陆配置
 	config := &ssh.ClientConfig{
-		Timeout:         time.Second,
+		Timeout:         time.Second * 5,
 		User:            sshUser,
 		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
 	}
