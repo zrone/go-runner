@@ -7,3 +7,5 @@ runtime/*.log
 .vscode/
 awesome-runner
 .DS_Store
+runtime/process.log
+data/pave.db
