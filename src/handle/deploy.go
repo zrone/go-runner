@@ -23,6 +23,17 @@ func DeployHandle(ctx iris.Context) {
 	symbolInt, _ := ctx.URLParamInt("symbol")
 	symbol = strconv.Itoa(symbolInt)
 
+	// 验证ssh链接配置
+	err := BuildProjConfigure(symbol)
+	if err != nil {
+		ctx.JSON(types.Response{
+			Code:    400,
+			Message: err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+
 	if symbol == "" {
 		ctx.JSON(types.Response{
 			Code:    400,

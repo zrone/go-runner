@@ -7,6 +7,7 @@ import (
 	"awesome-runner/src/sql"
 	interactive "awesome-runner/src/ssh"
 	"awesome-runner/types"
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -15,12 +16,14 @@ import (
 	"time"
 
 	"github.com/RichardKnop/machinery/v2/tasks"
+	"github.com/ThomasRooney/gexpect"
 	"github.com/go-playground/locales/zh"
 	ut "github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator/v10"
 	zh_translations "github.com/go-playground/validator/v10/translations/zh"
 	"github.com/golang-module/carbon"
 	"github.com/kataras/iris/v12"
+	"github.com/mitchellh/go-homedir"
 	taskLogrus "github.com/sirupsen/logrus"
 	"golang.org/x/crypto/ssh"
 )
@@ -520,4 +523,67 @@ func queryRepo(internalDeloy types.InternalDeploy, body ReleaseBody) ([]string, 
 	)
 
 	return resArr, nil, taskParam
+}
+
+// 项目 ssh 配置
+func BuildProjConfigure(symbol string) error {
+
+	userDir, _ := homedir.Dir()
+	sshKey := fmt.Sprintf(`%s/.ssh/id_rsa.pub`, userDir)
+	_, err := os.Stat(sshKey)
+	if err != nil {
+		// 生成 sshKey
+		child, err := gexpect.Spawn("ssh-keygen -t rsa")
+		if err != nil {
+			panic(err)
+		}
+		err = child.Expect("id_rsa):")
+		if err == nil {
+			child.SendLine("")
+		}
+		err = child.Expect("Enter passphrase (empty for no passphrase):")
+		if err == nil {
+			child.SendLine("")
+		}
+		err = child.Expect("Enter same passphrase again:")
+		if err == nil {
+			child.SendLine("")
+		}
+
+		child.Interact()
+		child.Close()
+	}
+
+	var ext types.InternalDeploy
+	sql.GetLiteInstance().Where("symbol = ?", symbol).Take(&ext)
+	if ext == (types.InternalDeploy{}) {
+		return errors.New(types.UNKNOWN_SYMBOL)
+	}
+	authorized_keys(sshKey, ext)
+	return nil
+}
+
+func authorized_keys(sshKey string, internalDeloy types.InternalDeploy) {
+	// 第一次免确认
+	child, err := gexpect.Spawn(fmt.Sprintf(`ssh-copy-id -i %s %s@%s -p %d`, sshKey, internalDeloy.Auth.User, internalDeloy.Auth.Host, internalDeloy.Auth.Port))
+	if err != nil {
+		panic(err)
+	}
+	err = child.ExpectTimeout("Are you sure you want to continue connecting (yes/no/[fingerprint])?", time.Second*5)
+	var symbol bool = false
+	if err == nil {
+		symbol = true
+		child.SendLine("yes")
+	}
+
+	if !symbol {
+		child.Close()
+		child, _ = gexpect.Spawn(fmt.Sprintf(`ssh-copy-id -i %s %s@%s -p %d`, sshKey, internalDeloy.Auth.User, internalDeloy.Auth.Host, internalDeloy.Auth.Port))
+	}
+	err = child.ExpectTimeout("password:", time.Second*5)
+	if err == nil {
+		child.SendLine(internalDeloy.Auth.Pwd)
+	}
+	child.Interact()
+	child.Close()
 }

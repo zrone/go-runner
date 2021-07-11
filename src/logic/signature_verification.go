@@ -183,7 +183,7 @@ func isAllowBranch(crypt types.CryptDataConfig, ref string) (bool, error, types.
 	}
 
 	dir, _ := os.Getwd()
-	cmd := exec.Command("/bin/bash", "-c", fmt.Sprintf("scp %s@%s:%s/.runner-ci.yml %s/runtime/git/%s.runner-ci.yml", crypt.Project.Auth.User, crypt.Project.Auth.Host, tempDir, dir, snowflake))
+	cmd := exec.Command("/bin/bash", "-c", fmt.Sprintf("scp -P %d %s@%s:%s/.runner-ci.yml %s/runtime/git/%s.runner-ci.yml", crypt.Project.Auth.Port, crypt.Project.Auth.User, crypt.Project.Auth.Host, tempDir, dir, snowflake))
 	cmd.Start()
 	cmd.Wait()
 

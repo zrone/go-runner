@@ -4,6 +4,7 @@ go 1.15
 
 require (
 	github.com/RichardKnop/machinery/v2 v2.0.11
+	github.com/ThomasRooney/gexpect v0.0.0-20161231170123-5482f0350944
 	github.com/go-git/go-git/v5 v5.4.2 // indirect
 	github.com/go-playground/locales v0.13.0
 	github.com/go-playground/universal-translator v0.17.0
@@ -14,6 +15,7 @@ require (
 	github.com/json-iterator/go v1.1.11
 	github.com/kataras/iris v0.0.2 // indirect
 	github.com/kataras/iris/v12 v12.1.8
+	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
 	github.com/lestrrat-go/strftime v1.0.4 // indirect
 	github.com/mitchellh/go-homedir v1.1.0

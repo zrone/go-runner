@@ -2,6 +2,7 @@ package types
 
 const (
 	NOTIFICATION_WORK_SERVER = "notification_work_server"
+	UNKNOWN_SYMBOL           = "Unknown symbol"
 )
 
 type Message struct {
