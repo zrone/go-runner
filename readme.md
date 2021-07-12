@@ -1,96 +1,39 @@
-# Pave 自动化部署
+# Go Runner 轻量级部署
 
+#### 项目介绍
 
-##### 配置redis
-etc/config.yaml
-![img.png](example/img.png)
+Go Runner 是领先的开源自动化项目部署服务！支持各种web、php、java、python、go等代码的发布，所有操作可以通过web来一键完成。Go Runner 基于 go 构建安装简单，无需安装其他依赖环境，开箱即用。Go Runner 是一个可自由配置项目的开源上线部署系统。
 
-##### 配置nginx
+> ```
+> 如果对您有帮助，您可以点右上角 “Star” 收藏一下 ，获取第一时间更新，谢谢！
+> ```
 
-```
-upstream runner {
-    server 0.0.0.0:8080 weight=1;
-}
+#### 下载
 
-server {
-    listen       80;
-    server_name  go.runner.io; # 域名设置
-    access_log   /usr/local/var/log/nginx/runner.log; # 日志目录
-    error_log    /usr/local/var/log/nginx/runner.error.log; # 日志目录
+[下载运行包](https://gitee.com/marksirl/go-runner/releases)
 
-    index index.html index.htm;
+#### 安装教程
 
-    add_header Access-Control-Allow-Origin *;
-    add_header Access-Control-Allow-Methods 'GET, POST, OPTIONS, PUT, DELETE, PATCH';
-    add_header Access-Control-Allow-Headers 'DNT,Keep-Alive,User-Agent,Cache-Control,Content-Type,Authorization,Access-Token';
-    # cors
-    if ($request_method = 'OPTIONS') {
-        return 204;
-    }
+[安装文档](https://doc.go-runner.wihens.com)
 
-    # api
-    location / {
-        client_max_body_size       50m;
-        client_body_buffer_size    128k;
-        proxy_connect_timeout      300;
-        proxy_send_timeout         300;
-        proxy_read_timeout         300;
-        proxy_buffer_size          4k;
-        proxy_buffers              4 32k;
-        proxy_busy_buffers_size    64k;
-        proxy_temp_file_write_size 64k;
+[Webhook配置教程](https://doc.go-runner.wihens.com/Deploy.html)
 
-        # 将客户端的 Host 和 IP 信息一并转发到对应节点
-        proxy_set_header Host $http_host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header REMOTE-HOST $remote_addr;
-        proxy_set_header HTTP-VIA $http_via;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#### 特性
 
-        # 转发Cookie，设置 SameSite
-        # proxy_cookie_path / "/; secure; HttpOnly; SameSite=strict";
-        proxy_cookie_path / "/; HttpOnly; SameSite=Lax";
+- 支持 gitlab、github、gitee仓库；
+- 支持手动发布上线部署；
+- 支持Test、Dev等多种环境webhook自动化部署，减少团队协作及开发成本；
+- websocket 实时展示部署中的 shell console
 
-        # 执行代理访问真实服务器
-        proxy_pass http://runner;
-    }
-    
-    # websocket
-    location /ws {
-        proxy_set_header Upgrade "websocket";
-        proxy_set_header Connection "upgrade";
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header Host $host;
-        proxy_http_version 1.1;
+#### 预览
 
-        # 转发到多个 ws server
-        proxy_pass http://runner;
-    }
-}
-```
+![image-20210712104925345](./example/readme/image-20210712104925345.png)
 
-##### 启动服务
-go run runner.go 或 ./runner
+![image-20210712104956950](./example/readme/image-20210712104956950.png)
 
-##### 访问web目录
-go.runner.io/web
-web默认用户
-- admin
-- 123456
+![image-20210712105011920](./example/readme/image-20210712105011920.png)
 
-##### 配置项目
-![img1.png](example/img1.png)
+#### 贡献
 
-##### 说明
-1. etc/config.yaml
-   
-   | 参数     | 说明                                  |
-   | -------- | ------------------------------------- |
-   | Host     | 主机HOST，默认 127.0.0.1              |
-   | Port     | 默认启动端口, 默认 8080               |
-   | Domain   | webhook  通知地址，自动化部署需要配置 |
-   | RedisDNS | redis配置                             |
-   | QueueDNS | redis配置                             |
-   
-2. 配置git sshkey
-3. 部署脚本名称固定 .runner-ci.yml，格式参考项目文件
+zrone \<xujining2008@126.com\>
+

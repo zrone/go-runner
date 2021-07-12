@@ -41,7 +41,6 @@ func Deliver(UUID string, Symbol string, Branch string, Env string, BeforeScript
 
 	sql.GetLiteInstance().Model(&taskRecord).Where("uuid = ?", UUID).Updates(types.TaskLog{
 		State: `RUNNING`,
-		EndAt: carbon.Now().ToTimestamp(),
 	})
 
 	// 链接SSH
@@ -69,7 +68,7 @@ func Deliver(UUID string, Symbol string, Branch string, Env string, BeforeScript
 	sshClient, err := ssh.Dial("tcp", addr, config)
 	if err != nil {
 		taskLogrus.Errorf("创建ssh client 失败, %v", err)
-		logr.Logrus.Errorf("创建ssh client 失败, %v", err)
+		// logr.Logrus.Errorf("创建ssh client 失败, %v", err)
 	}
 	defer sshClient.Close()
 
